@@ -5,7 +5,7 @@ RUN pip install poetry==1.6.1
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock /app
+COPY pyproject.toml poetry.lock /app/
 
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
@@ -27,6 +27,6 @@ COPY --from=builder $VENV_PATH $VENV_PATH
 
 WORKDIR /app
 
-COPY app.py .chainlit chainlit.md prompts.py tools.py /app
+COPY app.py .chainlit chainlit.md prompts.py tools.py /app/
 
 CMD ["chainlit", "run", "app.py"]
