@@ -1,9 +1,7 @@
 from langchain.agents import AgentType, initialize_agent
 from langchain.agents.structured_chat.prompt import SUFFIX
 from langchain.llms import OpenAI
-from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 import chainlit as cl
 from chainlit.input_widget import Select, Switch, Slider
@@ -42,9 +40,7 @@ async def start():
         ]
     ).send()
     await setup_agent(settings)
-    
-    #llm_chain = LLMChain(prompt=prompt, llm=OpenAI(temperature=0), verbose=True)
-    #cl.user_session.set("llm_chain", llm_chain)
+
 
 @cl.on_settings_update
 async def setup_agent(settings):
@@ -76,16 +72,9 @@ async def setup_agent(settings):
 
 
 @cl.on_message
-async def main(message: str):
+async def main(message: cl.Message):
     agent = cl.user_session.get("agent")
     res = await cl.make_async(agent.run)(
-        input=message, callbacks=[cl.AsyncLangchainCallbackHandler()]
+        input=message.content, callbacks=[cl.AsyncLangchainCallbackHandler()]
     )
     await cl.Message(content=res).send()
-
-#@cl.on_message
-#async def main(message: str):
-#    llm_chain = cl.user_session.get("llm_chain")
-#    res = await llm_chain.acall(message,
-#                                callbacks=[cl.AsyncLangchainCallbackHandler()])
-#    await cl.Message(content=res["text"]).send()

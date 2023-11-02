@@ -292,13 +292,13 @@ files = [
 
 [[package]]
 name = "chainlit"
-version = "0.7.2"
+version = "0.7.400"
 description = "A faster way to build chatbot UIs."
 optional = false
 python-versions = ">=3.8.1,<4.0.0"
 files = [
-    {file = "chainlit-0.7.2-py3-none-any.whl", hash = "sha256:c6fb7b953e5d88ece1ef262450a86eee1ac7d0169934b65c2e1574934ea6ddaf"},
-    {file = "chainlit-0.7.2.tar.gz", hash = "sha256:21c67aa1d105a02585aafcbb267e17e000a56628ef280b3fd3793b5713817ec9"},
+    {file = "chainlit-0.7.400-py3-none-any.whl", hash = "sha256:b61b9ba6e4c77ad6b7a1a4b25e00948674c30a51acd72c1fa4f6b350b439d2f1"},
+    {file = "chainlit-0.7.400.tar.gz", hash = "sha256:c2b5602bac39450e6e7f43af04bafa6a3de0285018fbd5f1c059cdfe97462859"},
 ]
 
 [package.dependencies]
@@ -3406,4 +3406,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "9becd9b97d721701990b18c2e2f01d55912112aded8f00497d802fdd958cbf89"
+content-hash = "97e8abbcfca96255dedcf0e5b3f0bd3a8d29aa3d028b36834e9a2819490a556b"
