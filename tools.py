@@ -25,7 +25,7 @@ class RewardGeneratorInput(BaseModel):
 
 def create_reward_generator_tool(verbose=True):
     agent_executor = create_python_agent(
-        llm=ChatOpenAI(temperature=0),
+        llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k-0613", streaming=True),
         tool=PythonREPLTool(),
         verbose=verbose,
         agent_type=AgentType.OPENAI_FUNCTIONS,

@@ -85,5 +85,5 @@ You should return a example configuration file with `use_lipinski_filter` and `u
 
 """
 
-SUFFIX_MASTER = """You are an AI language model assistant to help user about using AI-based molecule generator.
-    Your task is to generate a reward functions of the molecule generator based on the given user question."""
+SYSTEM_MESSAGE = """You are an AI language model assistant to help user about using AI-based molecule generator.
+Your task is to generate a reward function file (Python format) and a configuration file (YAML format) of the molecule generator based on the given user question."""
