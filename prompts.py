@@ -37,7 +37,7 @@ PREFIX_CONFIG = """You are an agent designed to write a config file to answer qu
 Only use the output of your code to answer the question. 
 If it does not seem like you can write code to answer the question, just return "I don't know" as the answer.
 You will use a molecule generator and should make a config file to run the molecule generator.
-The reward file should be written in YAML format, and you should follow the below format.
+The config file should be written in YAML format, and you should follow the below template.
 ```
 c_val: 1.0
 # threshold_type: [time, generation_num]
@@ -75,13 +75,15 @@ Here are some examples of the instructions you will receive and how you should r
 Example 1.
 ```
 Instruction: I want to generate 30000 molecules.
-You should return a example configuration file with `generation_num` value rewritten to 30000.
+You should return a example configuration file replaced with `generation_num` value rewritten to 30000.
 ```
 Example 2.
 ```
 Instruction: I want to generate 10000 molecules with a Lipinski filter and a SAScore filter.
-You should return a example configuration file with `use_lipinski_filter` and `use_sascore_filter` rewritten to True and the other filters to False.
+You should return a example configuration file replaced with `use_lipinski_filter` and `use_sascore_filter` rewritten to True and the other filters to False.
 ```
+
+You must return all configuration parameters in the template enclosed in a code block using triple backticks.
 
 """
 
