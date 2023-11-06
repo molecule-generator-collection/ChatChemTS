@@ -2,7 +2,7 @@ from langchain.agents import AgentType, initialize_agent
 from langchain.agents.structured_chat.prompt import SUFFIX
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.schema import SystemMessage
 import chainlit as cl
@@ -12,13 +12,10 @@ from tools import prepare_tools
 from prompts import SYSTEM_MESSAGE
 
 
-template = """Question: {question}
+@cl.cache
+def get_memory():
+    return ConversationBufferWindowMemory(memory_key="chat_history", k=1)
 
-Answer: Let's think step by step."""
-
-#@cl.cache
-#def get_memory():
-#    return ConversationBufferMemory(memory_key="chat_history")
 
 @cl.on_chat_start
 async def start():
@@ -85,20 +82,21 @@ async def setup_agent(settings):
         callbacks=[StreamingStdOutCallbackHandler()] if settings["Streaming"] else None,
         model=settings["Model"],
     )
-    #memory = get_memory()
-    #_SUFFIX = "Chat history:\n{chat_history}\n\n" + SUFFIX + SUFFIX_MASTER
-    _SUFFIX = SUFFIX
+    memory = get_memory()
+    _SUFFIX = "Chat history:\n{chat_history}\n\n" + SUFFIX
+    #_SUFFIX = SUFFIX
     agent_kwargs = {
         "suffix": _SUFFIX,
         "system_message": SystemMessage(content=SYSTEM_MESSAGE),
-        #"input_variables": ["input", "agent_scratchpad", "chat_history"]
+        "input_variables": ["input", "agent_scratchpad", "chat_history"]
     }
     tools = prepare_tools()
 
     agent = initialize_agent(
         llm=llm,
-        agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-        #memory=memory,
+        #agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+        memory=memory,
         tools=tools,
         agent_kwargs=agent_kwargs,
         verbose=True,
