@@ -112,5 +112,4 @@ async def main(message: cl.Message):
     res = await cl.make_async(agent.run)(
         input=message.content, callbacks=[cl.AsyncLangchainCallbackHandler(stream_final_answer=True,)]
     )
-    print(res)
     await cl.Message(content=res).send()
