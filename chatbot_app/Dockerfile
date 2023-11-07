@@ -27,6 +27,6 @@ COPY --from=builder $VENV_PATH $VENV_PATH
 
 WORKDIR /app
 
-COPY ./chatbot_app/app.py ./chatbot_app/.chainlit ./chatbot_app/chainlit.md ./chatbot_app/prompts.py ./chatbot_app/tools.py /app/
+COPY ./chatbot_app/app.py ./chatbot_app/chainlit.md ./chatbot_app/prompts.py ./chatbot_app/tools.py /app/
 
 CMD ["chainlit", "run", "app.py"]
