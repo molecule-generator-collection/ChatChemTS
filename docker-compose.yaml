@@ -1,5 +1,6 @@
 version: '3.8'
 services:
+  
   chatbot:
     build:
       context: .
@@ -8,3 +9,36 @@ services:
       - "8000:8000"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - shared_volume:/app/files
+    depends_on:
+      - api_chemtsv2
+    networks:
+      - chatmolgen_network
+  
+  api_chemtsv2:
+    build:
+      context: .
+      dockerfile: ./api_chemtsv2/Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - shared_volume:/app/files
+    networks:
+      - chatmolgen_network
+
+#volumes:
+#  - type: bind
+#    source: ./volumes_test_dir
+#    target: /shared_volume
+volumes:
+  shared_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/volumes_test_dir
+      o: bind
+
+networks:
+  chatmolgen_network:
+    driver: bridge

@@ -31,6 +31,10 @@ class LogP_reward(Reward):
     def calc_reward_from_objective_values(values, conf):
         return np.tanh(values[0]/10)
 ```
+
+When a Python file is specified using a standard path in `reward_module`, please convert it to dot notation.
+For instance, if the given path is `reward_module/my_submodule.py`, you should change it to `reward_module.my_submodule` in order to import it correctly.
+In addition, specify the class name described in the given reward file within `reward_class`.
 """
 
 PREFIX_CONFIG = """You are an agent designed to write a config file to answer questions.
@@ -61,15 +65,18 @@ use_radical_filter: True
 radical_filter:
   module: filter.radical_filter
   class: RadicalFilter
+  type: None
 use_pubchem_filter: True
 pubchem_filter:
   module: filter.pubchem_filter
   class: PubchemFilter
+  type: None
 use_sascore_filter: True
 sascore_filter:
   module: filter.sascore_filter
   class: SascoreFilter
   threshold: 3.5
+  type: None
 ```
 Here are some examples of the instructions you will receive and how you should respond to them.
 Example 1.
@@ -88,4 +95,6 @@ You must return all configuration parameters in the template enclosed in a code 
 """
 
 SYSTEM_MESSAGE = """You are an AI language model assistant to help user about using AI-based molecule generator.
-Your task is to generate a reward function file (Python format) and a configuration file (YAML format) of the molecule generator based on the given user question."""
+Your task is to write a reward function file (Python format) and a configuration file (YAML format) of ChemTSv2 based on the given user question and run ChemTSv2 using the written files.
+You need to use the prepared tools to do your above task, at least.
+"""

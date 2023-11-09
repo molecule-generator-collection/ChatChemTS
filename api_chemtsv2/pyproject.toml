@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "api-chemtsv2"
+version = "0.1.0"
+description = ""
+authors = ["sishida21 <29348731+sishida21@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "api_chemtsv2"}]
+
+[tool.poetry.dependencies]
+python = "^3.7.1"
+fastapi = "0.68.2"
+uvicorn = "0.22.0"
+chemtsv2 = "0.9.11"
+pandas = "1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

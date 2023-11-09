@@ -12,7 +12,7 @@ from tools import prepare_tools
 from prompts import SYSTEM_MESSAGE
 
 
-@cl.cache
+#@cl.cache
 def get_memory():
     return ConversationBufferWindowMemory(memory_key="chat_history", k=1)
 
@@ -25,7 +25,7 @@ async def start():
                 id="Model",
                 label="OpenAI - Model",
                 values=["gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613", "gpt-4"],
-                initial_index=1,
+                initial_index=2,
             ),
             Switch(
                 id="Streaming",
