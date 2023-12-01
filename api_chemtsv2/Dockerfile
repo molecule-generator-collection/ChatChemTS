@@ -1,5 +1,5 @@
 # builder image
-FROM python:3.7-slim AS builder
+FROM python:3.11-slim AS builder
 RUN apt-get update && \
     apt-get install -y git
 
@@ -18,7 +18,7 @@ ENV POETRY_NO_INTERACTION=1 \
 RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 
 # runtime image
-FROM python:3.7-slim AS runtime
+FROM python:3.11-slim AS runtime
 
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
