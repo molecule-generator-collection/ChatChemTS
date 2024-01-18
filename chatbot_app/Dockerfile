@@ -5,7 +5,7 @@ RUN pip install poetry==1.6.1
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock /app/
+COPY ./chatbot_app/pyproject.toml ./chatbot_app/poetry.lock /app/
 
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
