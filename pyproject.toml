@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "interface"
+version = "0.1.0"
+description = ""
+authors = ["sishida21 <29348731+sishida21@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+mols2grid = "^2.0.0"
+streamlit = "^1.30.0"
+pandas = "^2.1.4"
+rdkit = "^2023.9.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+

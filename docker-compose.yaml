@@ -27,6 +27,17 @@ services:
     networks:
       - chatmolgen_network
 
+  interface:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - shared_volume:/app/files
+    networks:
+      - chatmolgen_network
+
 #volumes:
 #  - type: bind
 #    source: ./volumes_test_dir
