@@ -8,10 +8,10 @@ from langchain.chains.conversation.prompt import PROMPT
 from langchain_experimental.agents.agent_toolkits import create_python_agent
 from langchain_experimental.tools.python.tool import PythonREPLTool
 from langchain.tools import Tool, BaseTool
-from langchain.agents.agent_toolkits import FileManagementToolkit
+from langchain_community.agent_toolkits import FileManagementToolkit
 from langchain.agents.agent_types import AgentType
 from langchain.agents import initialize_agent
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.schema import StrOutputParser
 from pydantic.v1 import BaseModel, Field
@@ -69,7 +69,7 @@ def create_config_generator_tool(verbose=False):
         verbose=verbose,
         prompt=PromptTemplate.from_template(PREFIX_CONFIG)+PROMPT,
     )
-    description = """This tool writes / generates a config file of ChemTSv2, related to the query. 
+    description = """This tool writes or generates a config file of ChemTSv2, related to the query.
         The input to this tool should be a `str` format, not `dict`.
         The input should be a phrase, not a single word."""
     config_tool = Tool.from_function(

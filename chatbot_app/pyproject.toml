@@ -7,11 +7,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-openai = "^0.28.1"
-langchain = "0.0.330"
-chainlit = "1.0.101"
+openai = "^1.9.0"
+langchain = "^0.1.1"
+chainlit = "^1.0.101"
 rdkit = "^2023.9.1"
-langchain-experimental = "^0.0.37"
+langchain-experimental = "^0.0.49"
+langchain-openai = "^0.0.3"
 
 
 [build-system]

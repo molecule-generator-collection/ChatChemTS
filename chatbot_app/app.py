@@ -1,7 +1,6 @@
 from langchain.agents import AgentType, initialize_agent
 from langchain.agents.structured_chat.prompt import SUFFIX
-from langchain.llms import OpenAI
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import OpenAI, ChatOpenAI
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.schema import SystemMessage
