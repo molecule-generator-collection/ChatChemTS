@@ -20,7 +20,7 @@ from prompts import PREFIX_REWARD, PREFIX_CONFIG
 
 
 def prepare_tools(verbose=True):
-    root_dir = "."
+    root_dir = "./files/"
     os.makedirs(root_dir, exist_ok=True)
     file_tools = FileManagementToolkit(root_dir=root_dir, 
                                        selected_tools=[

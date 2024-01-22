@@ -22,8 +22,8 @@ For example, if I want molecules that have high LogP value, you can make a rewar
 ```
 from rdkit.Chem import Descriptors
 import numpy as np
-from reward.reward import Reward
-class LogP_reward(Reward):
+from chemtsv2.reward import Reward
+class CustomReward(Reward):
     def get_objective_functions(conf):
         def LogP(mol):
             return Descriptors.MolLogP(mol)
@@ -32,16 +32,15 @@ class LogP_reward(Reward):
         return np.tanh(values[0]/10)
 ```
 
-When a Python file is specified using a standard path in `reward_module`, please convert it to dot notation.
-For instance, if the given path is `reward_module/my_submodule.py`, you should change it to `reward_module.my_submodule` in order to import it correctly.
-In addition, specify the class name described in the given reward file within `reward_class`.
+
 """
 
 PREFIX_CONFIG = """You are an agent designed to write a config file to answer questions.
 Only use the output of your code to answer the question. 
 If it does not seem like you can write code to answer the question, just return "I don't know" as the answer.
 You will use a molecule generator and should make a config file to run the molecule generator.
-The config file should be written in YAML format, and you should follow the below template.
+The config file should be written in YAML format.
+You should follow the below template, paying careful attention to indentation.
 ```
 c_val: 1.0
 # threshold_type: [time, generation_num]
@@ -50,33 +49,33 @@ threshold_type: generation_num
 generation_num: 300
 output_dir: result/example01
 model_setting:
-  model_json: model/model.tf25.json
-  model_weight: model/model.tf25.best.ckpt.h5
+    model_json: model/model.tf25.json
+    model_weight: model/model.tf25.best.ckpt.h5
 token: model/tokens.pkl
-reward_setting: 
-  reward_module: reward.logP_reward
-  reward_class: LogP_reward
-use_lipinski_filter: True
+reward_setting:
+    reward_module: reward.logP_reward
+    reward_class: CustomReward
+use_lipinski_filter: False
 lipinski_filter:
-  module: filter.lipinski_filter
-  class: LipinskiFilter
-  type: rule_of_5
-use_radical_filter: True
+    module: filter.lipinski_filter
+    class: LipinskiFilter
+    type: rule_of_5
+use_radical_filter: False
 radical_filter:
-  module: filter.radical_filter
-  class: RadicalFilter
-  type: None
-use_pubchem_filter: True
+    module: filter.radical_filter
+    class: RadicalFilter
+    type: None
+use_pubchem_filter: False
 pubchem_filter:
-  module: filter.pubchem_filter
-  class: PubchemFilter
-  type: None
-use_sascore_filter: True
+    module: filter.pubchem_filter
+    class: PubchemFilter
+    type: None
+use_sascore_filter: False
 sascore_filter:
-  module: filter.sascore_filter
-  class: SascoreFilter
-  threshold: 3.5
-  type: None
+    module: filter.sascore_filter
+    class: SascoreFilter
+    threshold: 3.5
+    type: None
 ```
 Here are some examples of the instructions you will receive and how you should respond to them.
 Example 1.
@@ -90,8 +89,10 @@ Instruction: I want to generate 10000 molecules with a Lipinski filter and a SAS
 You should return a example configuration file replaced with `use_lipinski_filter` and `use_sascore_filter` rewritten to True and the other filters to False.
 ```
 
-You must return all configuration parameters in the template enclosed in a code block using triple backticks.
+When a Python file name is specified by users, please convert it to dot notation.
+For instance, if the given file is `custom_reward.py`, you should change it to `files.custom_reward` in order to import it correctly.
 
+You must return all configuration parameters in the template enclosed in a code block using triple backticks.
 """
 
 SYSTEM_MESSAGE = """You are an AI language model assistant to help user about using AI-based molecule generator.
