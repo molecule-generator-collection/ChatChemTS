@@ -8,7 +8,7 @@ packages = [{include = "api_chemtsv2"}]
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
-chemtsv2 = "^1.0.0"
+chemtsv2 = "^1.0.2"
 fastapi = "^0.109.0"
 uvicorn = {extras = ["standard"], version = "^0.26.0"}
 
