@@ -13,6 +13,10 @@ async def run_chemtsv2(
     with open(config_file_path, "r") as f:
         conf = yaml.load(f, Loader=yaml.SafeLoader)
 
+    output_path = os.path.join(conf['output_dir'], f"result_C{conf['c_val']}.csv")
+    if os.path.exists(output_path):
+        return {"failed reason": f"[ERROR] {output_path} already exists. Inform users of this error."}
+
     try:
         subprocess.run(["chemtsv2", "-c", config_file_path], check=True)
         return {"output_result_dir": conf['output_dir']}
@@ -22,4 +26,4 @@ async def run_chemtsv2(
 
 @app.get("/")
 def get_root():
-    return {"message": "Hello World"}
+    return {"message": "API for running ChemTSv2"}
