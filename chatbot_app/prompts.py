@@ -1,7 +1,7 @@
 PREFIX_REWARD = """You are an agent designed to write python code to answer questions.
 Only use the output of your code to answer the question. 
 If it does not seem like you can write code to answer the question, just return "I don't know" as the answer. 
-You must not execute the python code.
+Do NOT execute the python code.
 You will use a molecule generator and should make a reward file for what kind of functionalities I want molecules to have.
 The reward file should be written in Python3, and you should follow the below format.
 ```
@@ -35,47 +35,47 @@ class CustomReward(Reward):
 
 """
 
-PREFIX_CONFIG = """You are an agent designed to write a config file to answer questions.
-Only use the output of your code to answer the question. 
+PREFIX_CONFIG = """You are an agent designed to write a configuration file to answer questions.
+To answer the question, must respond directory the output of the written code. 
 If it does not seem like you can write code to answer the question, just return "I don't know" as the answer.
 You will use a molecule generator and should make a config file to run the molecule generator.
 The config file should be written in YAML format.
-You should follow the below template, paying careful attention to indentation.
+You should follow the below template.
 ```
 c_val: 1.0
 # threshold_type: [time, generation_num]
 threshold_type: generation_num
 #hours: 0.01
 generation_num: 300
-output_dir: result/example01
+output_dir: files/example01
 model_setting:
-    model_json: model/model.tf25.json
-    model_weight: model/model.tf25.best.ckpt.h5
+  model_json: model/model.tf25.json
+  model_weight: model/model.tf25.best.ckpt.h5
 token: model/tokens.pkl
 reward_setting:
-    reward_module: reward.logP_reward
-    reward_class: CustomReward
+  reward_module: reward.logP_reward
+  reward_class: CustomReward
 use_lipinski_filter: False
 lipinski_filter:
-    module: filter.lipinski_filter
-    class: LipinskiFilter
-    type: rule_of_5
+  module: filter.lipinski_filter
+  class: LipinskiFilter
+  type: rule_of_5
 use_radical_filter: False
 radical_filter:
-    module: filter.radical_filter
-    class: RadicalFilter
-    type: None
+  module: filter.radical_filter
+  class: RadicalFilter
+  type: None
 use_pubchem_filter: False
 pubchem_filter:
-    module: filter.pubchem_filter
-    class: PubchemFilter
-    type: None
+  module: filter.pubchem_filter
+  class: PubchemFilter
+  type: None
 use_sascore_filter: False
 sascore_filter:
-    module: filter.sascore_filter
-    class: SascoreFilter
-    threshold: 3.5
-    type: None
+  module: filter.sascore_filter
+  class: SascoreFilter
+  threshold: 3.5
+  type: None
 ```
 Here are some examples of the instructions you will receive and how you should respond to them.
 Example 1.
@@ -87,6 +87,12 @@ Example 2.
 ```
 Instruction: I want to generate 10000 molecules with a Lipinski filter and a SAScore filter.
 You should return a example configuration file replaced with `use_lipinski_filter` and `use_sascore_filter` rewritten to True and the other filters to False.
+```
+Example 3.
+```
+Instruction: I want to generate 30000 molecules and save the result in `test01`.
+You should return a example configuration file replaced with `generation_num` value rewritten to 30000 and `output_dir` path rewritten to `files/test01`.
+Note that all `output_dir` must start with the `files/` directory.
 ```
 
 When a Python file name is specified by users, please convert it to dot notation.

@@ -19,18 +19,17 @@ from pydantic.v1 import BaseModel, Field
 from prompts import PREFIX_REWARD, PREFIX_CONFIG
 
 
-def prepare_tools(verbose=True):
+def prepare_tools(model_name="gpt-3.5-turbo-1106", verbose=True):
     root_dir = "./files/"
     os.makedirs(root_dir, exist_ok=True)
     file_tools = FileManagementToolkit(root_dir=root_dir, 
                                        selected_tools=[
                                            'read_file',
-                                           'write_file',
-                                           'list_directory',]).get_tools()
+                                           'write_file',]).get_tools()
 
     return [
-        create_reward_generator_tool(),
-        create_config_generator_tool(),
+        create_reward_generator_tool(model_name),
+        create_config_generator_tool(model_name),
     ] + file_tools + [ChemTSv2ApiTool()]
 
 
@@ -38,9 +37,9 @@ class RewardGeneratorInput(BaseModel):
     query: str = Field(..., description="The string argument for this tool")
     
 
-def create_reward_generator_tool(verbose=False):
+def create_reward_generator_tool(model_name, verbose=False):
     agent_executor = create_python_agent(
-        llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k-0613", streaming=False),
+        llm=ChatOpenAI(temperature=0, model=model_name, streaming=False),
         tool=PythonREPLTool(),
         verbose=verbose,
         agent_type=AgentType.OPENAI_FUNCTIONS,
@@ -48,7 +47,7 @@ def create_reward_generator_tool(verbose=False):
     )
     description = """This tool writes or generates a reward function of ChemTSv2, related to the query. 
         The input to this tool should be a `str` format, not `dict`.
-        The input should be a phrase, not a single word."""
+        The input must be a instruction sentence, not a single word."""
     reward_tool = Tool.from_function(
         func=agent_executor.run,
         name="reward_generator",
@@ -63,15 +62,15 @@ class ConfigGeneratorInput(BaseModel):
     query: str = Field(..., description="The string argument for this tool")
 
 
-def create_config_generator_tool(verbose=False):
+def create_config_generator_tool(model_name, verbose=False):
     llm_chain = ConversationChain(
-        llm=ChatOpenAI(temperature=0, streaming=False),
+        llm=ChatOpenAI(temperature=0, model=model_name, streaming=False),
         verbose=verbose,
         prompt=PromptTemplate.from_template(PREFIX_CONFIG)+PROMPT,
     )
     description = """This tool writes or generates a config file of ChemTSv2, related to the query.
         The input to this tool should be a `str` format, not `dict`.
-        The input should be a phrase, not a single word."""
+        The input must be a instruction sentence, not a single word."""
     config_tool = Tool.from_function(
         func=llm_chain.run,
         name="config_generator",

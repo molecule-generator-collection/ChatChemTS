@@ -89,7 +89,7 @@ async def setup_agent(settings):
         "system_message": SystemMessage(content=SYSTEM_MESSAGE),
         "input_variables": ["input", "agent_scratchpad", "chat_history"]
     }
-    tools = prepare_tools()
+    tools = prepare_tools(model_name=settings["Model"])
 
     agent = initialize_agent(
         llm=llm,
