@@ -23,8 +23,8 @@ async def start():
             Select(
                 id="Model",
                 label="OpenAI - Model",
-                values=["gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613", "gpt-4"],
-                initial_index=2,
+                values=["gpt-3.5-turbo-1106", "gpt-4", "gpt-4-1106-preview"],
+                initial_index=1,
             ),
             Switch(
                 id="Streaming",
@@ -93,7 +93,6 @@ async def setup_agent(settings):
 
     agent = initialize_agent(
         llm=llm,
-        #agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
         agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
         memory=memory,
         tools=tools,
