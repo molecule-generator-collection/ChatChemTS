@@ -37,11 +37,18 @@ services:
       - shared_volume:/app/files
     networks:
       - chatmolgen_network
+  
+  model_builder:
+    build:
+      context: .
+      dockerfile: ./model_builder_app/Dockerfile
+    ports:
+      - "8002:8002"
+    volumes:
+      - shared_volume:/app/files
+    networks:
+      - chatmolgen_network
 
-#volumes:
-#  - type: bind
-#    source: ./volumes_test_dir
-#    target: /shared_volume
 volumes:
   shared_volume:
     driver: local

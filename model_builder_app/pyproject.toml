@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "model_builder"
+version = "0.1.0"
+description = ""
+authors = ["sishida21 <29348731+sishida21@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+streamlit = "^1.30.0"
+pandas = "^2.1.4"
+flaml = {extras = ["automl"], version = "^2.1.1"}
+matplotlib = "^3.8.2"
+scikit-learn = "^1.4.0"
+rdkit = "^2023.9.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+

@@ -30,7 +30,7 @@ def prepare_tools(model_name="gpt-3.5-turbo-1106", verbose=True):
     return [
         create_reward_generator_tool(model_name),
         create_config_generator_tool(model_name),
-    ] + file_tools + [ChemTSv2ApiTool()]
+    ] + file_tools + [ChemTSv2ApiTool(), PredictionModelBuilder()]
 
 
 class RewardGeneratorInput(BaseModel):
@@ -112,3 +112,30 @@ class ChemTSv2ApiTool(BaseTool):
     async def _arun(self, config_file_path: str) -> str:
         raise NotImplementedError
     
+
+class PredictionModelBuilderInput():
+    pass
+
+class PredictionModelBuilder(BaseTool):
+    name = "flaml_prediction_model_builder_tool"
+    description = "This tool build a prediction model using FLAML"
+
+    def __init__(self):
+        super(PredictionModelBuilder, self).__init__()
+    
+    def _run(self, config_file_path: str) -> str:
+        headers = {
+            'Accept': 'application/json',
+            }
+        #conn = http.client.HTTPConnection('localhost', 8001)
+        conn = http.client.HTTPConnection('model_builder', 8002)
+        conn.request('POST', '/model_builder/', headers=headers)
+        response = conn.getresponse()
+        status = response.status
+        content = response.read().decode()
+        conn.close()
+
+        return f"{status} {content}"
+    
+    async def _arun(self, config_file_path: str) -> str:
+        raise NotImplementedError
