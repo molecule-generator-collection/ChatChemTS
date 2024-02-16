@@ -118,24 +118,14 @@ class PredictionModelBuilderInput():
 
 class PredictionModelBuilder(BaseTool):
     name = "flaml_prediction_model_builder_tool"
-    description = "This tool build a prediction model using FLAML"
+    description = """This tool opens an application for building a prediction model using FLAML.
+                     No arguments are required to use this tool."""
 
     def __init__(self):
         super(PredictionModelBuilder, self).__init__()
     
-    def _run(self, config_file_path: str) -> str:
-        headers = {
-            'Accept': 'application/json',
-            }
-        #conn = http.client.HTTPConnection('localhost', 8001)
-        conn = http.client.HTTPConnection('model_builder', 8002)
-        conn.request('POST', '/model_builder/', headers=headers)
-        response = conn.getresponse()
-        status = response.status
-        content = response.read().decode()
-        conn.close()
-
-        return f"{status} {content}"
+    def _run(self) -> str:
+        return f"Open [FLAML Model Builder](http://localhost:8002) in your browser to create prediction models."
     
-    async def _arun(self, config_file_path: str) -> str:
+    async def _arun(self) -> str:
         raise NotImplementedError

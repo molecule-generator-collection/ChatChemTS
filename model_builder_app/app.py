@@ -1,3 +1,6 @@
+import os
+import pickle
+
 from flaml import AutoML
 import numpy as np
 from rdkit import Chem
@@ -78,6 +81,12 @@ if uploaded_file is not None:
         value=60,
     )
 
+    st.subheader("Output Filename For Best Estimator")
+    output_fname = st.text_input(
+        "Enter filename in pickle format",
+        value="flaml_model.pkl"
+    )
+
     if st.button("Run AutoML", type='primary'):
         with st.spinner("AutoML started..."):
             automl = AutoML()
@@ -101,7 +110,10 @@ if uploaded_file is not None:
             y_pred = automl.predict(X_test)
             correlation = np.corrcoef(y_pred, y_test)[0, 1]
             ax.scatter(y_pred, y_test, marker='o', s=20, c='dimgray', alpha=0.2)
-            ax.text(1.0, 0.1, f"Corr. Coef.: {correlation:.2f}\nBest Estimator: {automl.model.estimator}", transform=ax.transAxes)
+            ax.text(1.05, 0.05, f"Corr. Coef.: {correlation:.2f}\nBest Estimator: {automl.best_estimator}", fontsize='small', transform=ax.transAxes)
             ax.set_xlabel("Prediction Value")
             ax.set_ylabel("Actual Value")
             st.pyplot(fig, use_container_width=False)
+
+        with open(os.path.join('/app/files', output_fname), 'wb') as f:
+            pickle.dump(automl, f, pickle.HIGHEST_PROTOCOL)
