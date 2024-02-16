@@ -23,7 +23,7 @@ PREFIX_REWARD = """
 - Ensure the reward file is written in Python3, adhering to the specified format.
 
 
-**Example:**
+**Reward Abstract Method:**
 ```python
 from abc import ABC, abstractmethod
 from typing import List, Callable
@@ -38,7 +38,11 @@ class Reward(ABC):
     def calc_reward_from_objective_values(values: List[float], conf: dict) -> float:
         raise NotImplementedError('Please check your reward file')
 ```
-For example, if I want molecules that have high LogP value, you can make a reward file as follows:
+
+**Instructions and Responses:**
+- **Example 1:**
+Instruction: Generate molecules that have high LogP value
+Response: Return a reward file with reference to the following script:
 ```python
 from rdkit.Chem import Descriptors
 import numpy as np
@@ -51,7 +55,28 @@ class CustomReward(Reward):
     def calc_reward_from_objective_values(values, conf):
         return np.tanh(values[0]/10)
 ```
-
+- **Example 2:**
+Instruction: Generate molecules that have high prediction value using FLAML model.
+Response: Return a reward file with reference to the following script:
+```python
+import os
+import pickle
+from rdkit import Chem
+from rdkit.Chem import AllChem
+import numpy as np
+from chemtsv2.reward import Reward
+FLAML_MODEL_NAME = flaml_model.pkl  # Need to replace user specified filename.
+with open(os.path.join('/app/files', FLAML_MODEL_NAME), 'rb') as f:
+    AUTOML = pickle.load(f)
+class CustomReward(Reward):
+    def get_objective_functions(conf):
+        def PredictedValue(mol):
+            fp = np.array(AllChem.GetMorganFingerprintAsBitVect(mol, 2, 2048))[np.newaxis, :]
+            return AUTOML.predict(fp)  # predicted value is assumed to be scaled.
+        return [PredictedValue]
+    def calc_reward_from_objective_values(values, conf):
+        return np.tanh(values[0])
+```
 
 **Caution:**
 - Do NOT execute any python code.
