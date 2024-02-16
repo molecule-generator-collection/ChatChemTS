@@ -6,6 +6,7 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 import streamlit as st
 import pandas as pd
 import matplotlib
@@ -38,7 +39,7 @@ if uploaded_file is not None:
         index=None,
     )
     label_col_name = st.selectbox(
-        "Select label column name",
+        "Select target column name",
         options=df.columns,
         index=None,
     )
@@ -86,6 +87,14 @@ if uploaded_file is not None:
         "Enter filename in pickle format",
         value="flaml_model.pkl"
     )
+    use_scaler = st.checkbox("Apply standardization for target values")
+    if use_scaler:
+        st.subheader("Output Filename For Scaler")
+        output_scaler_name = st.text_input(
+            "Enter filename in pickle format",
+            value="standard_scaler.pkl"
+        )
+
 
     if st.button("Run AutoML", type='primary'):
         with st.spinner("AutoML started..."):
@@ -96,6 +105,10 @@ if uploaded_file is not None:
             X = np.array(df_x.tolist())
             y = df[label_col_name]
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size_ratio, random_state=42)
+            if use_scaler:
+                scaler = StandardScaler()
+                y_train = np.squeeze(scaler.fit_transform(y_train.to_numpy().reshape(-1, 1)))
+                y_test = np.squeeze(scaler.transform(y_test.to_numpy().reshape(-1, 1)))
 
             automl_settings = {
                 "time_budget": time_budget,
@@ -109,7 +122,10 @@ if uploaded_file is not None:
             fig, ax = plt.subplots(figsize=(4, 4))
             y_pred = automl.predict(X_test)
             correlation = np.corrcoef(y_pred, y_test)[0, 1]
-            ax.scatter(y_pred, y_test, marker='o', s=20, c='dimgray', alpha=0.2)
+            if use_scaler:
+                ax.scatter(scaler.inverse_transform(y_pred.reshape(-1, 1)), scaler.inverse_transform(y_test.reshape(-1, 1)), marker='o', s=20, c='dimgray', alpha=0.2)
+            else:
+                ax.scatter(y_pred, y_test, marker='o', s=20, c='dimgray', alpha=0.2)
             ax.text(1.05, 0.05, f"Corr. Coef.: {correlation:.2f}\nBest Estimator: {automl.best_estimator}", fontsize='small', transform=ax.transAxes)
             ax.set_xlabel("Prediction Value")
             ax.set_ylabel("Actual Value")
@@ -117,3 +133,7 @@ if uploaded_file is not None:
 
         with open(os.path.join('/app/files', output_fname), 'wb') as f:
             pickle.dump(automl, f, pickle.HIGHEST_PROTOCOL)
+
+        if use_scaler:
+            with open(os.path.join('/app/files', output_scaler_name), 'wb') as f:
+                pickle.dump(scaler, f)
