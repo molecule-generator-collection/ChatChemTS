@@ -72,7 +72,7 @@ class CustomReward(Reward):
     def get_objective_functions(conf):
         def PredictedValue(mol):
             fp = np.array(AllChem.GetMorganFingerprintAsBitVect(mol, 2, 2048))[np.newaxis, :]
-            return AUTOML.predict(fp)  # predicted value is assumed to be scaled.
+            return AUTOML.predict(fp).item()  # predicted value is assumed to be scaled.
         return [PredictedValue]
     def calc_reward_from_objective_values(values, conf):
         return np.tanh(values[0])
