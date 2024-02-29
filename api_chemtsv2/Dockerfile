@@ -6,7 +6,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 RUN git clone --depth 1 https://github.com/molecule-generator-collection/ChemTSv2.git /app
-RUN pip install poetry==1.5.1
+RUN pip install poetry==1.6.1
 
 COPY ./api_chemtsv2/pyproject.toml ./api_chemtsv2/poetry.lock /app/
 
@@ -19,6 +19,9 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 
 # runtime image
 FROM python:3.11-slim AS runtime
+RUN apt-get update && \
+    apt-get install -y libgomp1 && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \

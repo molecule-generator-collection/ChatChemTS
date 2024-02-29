@@ -11,7 +11,7 @@ python = ">=3.11,<3.12"
 chemtsv2 = "^1.0.2"
 fastapi = "^0.109.0"
 uvicorn = {extras = ["standard"], version = "^0.26.0"}
-
+flaml = {extras = ["automl"], version = "^2.1.1"}
 
 [build-system]
 requires = ["poetry-core"]
