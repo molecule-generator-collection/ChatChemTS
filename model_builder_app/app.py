@@ -62,6 +62,7 @@ with col1:
 with col2:
     st.button('Fetch data from ChEMBL database', type='primary', on_click=click_button, kwargs=dict(clicked_type='uniprot'))
 
+df = None
 if st.session_state.use_dataset_from_csv:
     uploaded_file = st.file_uploader("Upload CSV file.", type="csv")
     if uploaded_file is not None:
@@ -122,12 +123,37 @@ if st.session_state.use_dataset_from_uniprotid:
                         "standard_units",
                         "standard_relation",
                         "target_organism",
-                        "target_chembl_id"
-                    )
+                        "target_chembl_id")
                 tmp_df_list.append(pd.DataFrame.from_dict(activities))
             df_activity = pd.concat(tmp_df_list, ignore_index=True)
             df_activity.drop(['units', 'type', 'value', 'relation'], axis=1, inplace=True)
-            df_activity = df_activity[[
+            if duplicate_option == "Keep Maximum Value":
+                df_activity = df_activity.loc[df_activity.groupby('molecule_chembl_id')['pchembl_value'].idxmax()].sort_values('activity_id')
+            if duplicate_option == "Keep Minimum Value":
+                df_activity = df_activity.loc[df_activity.groupby('molecule_chembl_id')['pchembl_value'].idxmin()].sort_values('activity_id')
+            if duplicate_option == "Do Nothing":
+                pass
+            if duplicate_option == "Keep Maximum Value" or duplicate_option == "Keep Minimum Value":
+                df_activity.reset_index(drop=True, inplace=True)
+            df_activity = df_activity[~df_activity['assay_description'].apply(lambda x: any(remove_text in x for remove_text in assay_exclude_list))]
+            df_activity = df_activity[~df_activity['assay_description'].isin(exclude_activity_types)]
+
+            # fetch molecule-related data
+            molecule_provider = molecule_api.filter(
+                molecule_chembl_id__in=list(df_activity["molecule_chembl_id"])
+                ).only("molecule_chembl_id", "molecule_structures")
+            df_molecule = pd.DataFrame.from_dict(molecule_provider)
+            df_molecule.dropna(axis=0, how="any", inplace=True)
+            df_molecule.drop_duplicates("molecule_chembl_id", keep='first', inplace=True)
+            df_molecule['canonical_smiles'] = df_molecule['molecule_structures'].apply(lambda x: x.get('canonical_smiles', None))
+            df_molecule.drop("molecule_structures", axis=1, inplace=True)
+            df_molecule.dropna(axis=0, how="any", inplace=True)
+
+            # merge both dataframe
+            df = pd.merge(df_molecule, df_activity, on="molecule_chembl_id", how='inner')
+            df.reset_index(drop=True, inplace=True)
+            # reorder columns
+            df = df[[
                 "canonical_smiles",
                 "pchembl_value",
                 "assay_description",
@@ -141,18 +167,6 @@ if st.session_state.use_dataset_from_uniprotid:
                 "molecule_chembl_id",
                 "target_organism",
                 "target_chembl_id"]]
-
-            if duplicate_option == "Keep Maximum Value":
-                df_activity = df_activity.loc[df_activity.groupby('molecule_chembl_id')['pchembl_value'].idxmax()].sort_values('activity_id')
-            if duplicate_option == "Keep Minimum Value":
-                df_activity = df_activity.loc[df_activity.groupby('molecule_chembl_id')['pchembl_value'].idxmin()].sort_values('activity_id')
-            if duplicate_option == "Do Nothing":
-                pass
-            if duplicate_option == "Keep Maximum Value" or duplicate_option == "Keep Minimum Value":
-                df_activity.reset_index(drop=True, inplace=True)
-
-            df_activity = df_activity[~df_activity['assay_description'].apply(lambda x: any(remove_text in x for remove_text in assay_exclude_list))]
-            df = df_activity[~df_activity['assay_description'].isin(exclude_activity_types)]
 
 if df is not None:
     st.header("Dataset Preview")

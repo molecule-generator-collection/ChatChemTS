@@ -118,7 +118,7 @@ class PredictionModelBuilderInput():
 
 class PredictionModelBuilder(BaseTool):
     name = "flaml_prediction_model_builder_tool"
-    description = """This tool opens an application for building a prediction model using FLAML.
+    description = """This tool returns a URL of an application for building a prediction model using FLAML.
                      No arguments are required to use this tool."""
 
     def __init__(self):
