@@ -1,6 +1,10 @@
 import os
 import pickle
 
+from chembl_webresource_client.settings import Settings
+Settings.Instance().MAX_LIMIT = 1000
+Settings.Instance().CACHING = False
+from chembl_webresource_client.new_client import new_client
 from flaml import AutoML
 import numpy as np
 from rdkit import Chem
@@ -21,13 +25,138 @@ if "use_auto_estimator" not in st.session_state:
     st.session_state.use_auto_estimator = True
 if "use_auto_metric" not in st.session_state:
     st.session_state.use_auto_metric = True
+if "use_dataset_from_csv" not in st.session_state:
+    st.session_state.use_dataset_from_csv = False
+if "use_dataset_from_uniprotid" not in st.session_state:
+    st.session_state.use_dataset_from_uniprotid = False
 
+def click_button(clicked_type):
+    if clicked_type == "csv":
+        if not st.session_state.use_dataset_from_csv:
+            st.session_state.use_dataset_from_csv = not st.session_state.use_dataset_from_csv
+            st.session_state.use_dataset_from_uniprotid = not st.session_state.use_dataset_from_csv
+    elif clicked_type == "uniprot":
+        if not st.session_state.use_dataset_from_uniprotid:
+            st.session_state.use_dataset_from_uniprotid = not st.session_state.use_dataset_from_uniprotid
+            st.session_state.use_dataset_from_csv = not st.session_state.use_dataset_from_uniprotid
+    else:
+        raise Exception
 
-df = None
-uploaded_file = st.file_uploader("Upload CSV file.", type="csv")
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.header("Uploaded File Preview")
+button_style = """
+<style>
+div.stButton > button:first-child {
+    text-align: center;
+    width: 400px;
+}
+div.stButton {
+    text-align: center;
+}
+</style>
+"""
+st.markdown(button_style, unsafe_allow_html=True)
+
+st.subheader("Data source to build models")
+col1, col2 = st.columns(2)
+with col1:
+    st.button('Upload CSV file', type='primary', on_click=click_button, kwargs=dict(clicked_type='csv'))
+with col2:
+    st.button('Fetch data from ChEMBL database', type='primary', on_click=click_button, kwargs=dict(clicked_type='uniprot'))
+
+if st.session_state.use_dataset_from_csv:
+    uploaded_file = st.file_uploader("Upload CSV file.", type="csv")
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+if st.session_state.use_dataset_from_uniprotid:
+    uniprot_id = st.text_input("Enter UniProt ID of target protein")
+    target_api = new_client.target
+    molecule_api = new_client.molecule
+    activity_api = new_client.activity
+
+    # fetch target-related data
+    target_results = pd.DataFrame(
+        target_api.filter(
+            target_components__accession=uniprot_id
+        ).filter(target_type="SINGLE PROTEIN"))
+    if not uniprot_id:
+        st.stop()
+    if target_results.empty:
+        st.warning("ChEMBL database contains NO records for the provided UniProt ID. Try another ID.")
+        st.stop()
+    st.success("ChEMBL database contains records for the provided UniProt ID. Proceed to the next step.")
+
+    st.subheader("Deduplicate molecules by selecting representative pChEMBL values")
+    duplicate_option = st.selectbox(
+        'Select which duplicates (if any) to keep.',
+        ('Keep Maximum Value', 'Keep Minimum Value', 'Do Nothing'),
+    )
+    
+    st.subheader("Filter records containing the following texts in assay descriptions.")
+    assay_exclude_text = st.text_input("Eenter words or substrings separated by commas", value='mutat,covalent,irreversible')
+    assay_exclude_list = assay_exclude_text.split(',')
+    assay_exclude_list = [t.lower() for t in assay_exclude_list if t]  # remove '' and lowercase texts.
+
+    st.subheader("Filter records by activity type.")
+    exclude_activity_types = st.multiselect(
+        "Select activity types to exclude records from dataset",
+        options=["IC50", "XC50", "EC50", "AC50", "Ki", "Kd", "Potency", "ED50"],
+        default=["EC50", "AC50"]
+    )
+
+    if st.button("Fetch & Clean Data", type='primary'):
+        with st.spinner("Processing..."):
+            # fetch activity-related data
+            #df_activity = pd.read_csv("./chembl_example_uniprot_P00533_rmidx.csv", sep='\t')
+            tmp_df_list = []
+            for _, tr in target_results.iterrows():
+                activities = activity_api.filter(
+                        target_chembl_id=tr['target_chembl_id'], assay_type="B"
+                    ).filter(pchembl_value__isnull=False).only(
+                        "activity_id",
+                        "assay_chembl_id",
+                        "assay_description",
+                        "assay_type",
+                        "molecule_chembl_id",
+                        "pchembl_value",
+                        "standard_type",
+                        "standard_value",
+                        "standard_units",
+                        "standard_relation",
+                        "target_organism",
+                        "target_chembl_id"
+                    )
+                tmp_df_list.append(pd.DataFrame.from_dict(activities))
+            df_activity = pd.concat(tmp_df_list, ignore_index=True)
+            df_activity.drop(['units', 'type', 'value', 'relation'], axis=1, inplace=True)
+            df_activity = df_activity[[
+                "canonical_smiles",
+                "pchembl_value",
+                "assay_description",
+                "standard_type",
+                "standard_value",
+                "standard_units",
+                "standard_relation",
+                "activity_id",
+                "assay_chembl_id",
+                "assay_type",
+                "molecule_chembl_id",
+                "target_organism",
+                "target_chembl_id"]]
+
+            if duplicate_option == "Keep Maximum Value":
+                df_activity = df_activity.loc[df_activity.groupby('molecule_chembl_id')['pchembl_value'].idxmax()].sort_values('activity_id')
+            if duplicate_option == "Keep Minimum Value":
+                df_activity = df_activity.loc[df_activity.groupby('molecule_chembl_id')['pchembl_value'].idxmin()].sort_values('activity_id')
+            if duplicate_option == "Do Nothing":
+                pass
+            if duplicate_option == "Keep Maximum Value" or duplicate_option == "Keep Minimum Value":
+                df_activity.reset_index(drop=True, inplace=True)
+
+            df_activity = df_activity[~df_activity['assay_description'].apply(lambda x: any(remove_text in x for remove_text in assay_exclude_list))]
+            df = df_activity[~df_activity['assay_description'].isin(exclude_activity_types)]
+
+if df is not None:
+    st.header("Dataset Preview")
+    st.text(f"Record count: {len(df)}")
     st.dataframe(df, use_container_width=True, hide_index=True)
 
     st.header("FLAML Settings")
