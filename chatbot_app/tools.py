@@ -20,7 +20,7 @@ from prompts import PREFIX_REWARD, PREFIX_CONFIG
 
 
 def prepare_tools(model_name="gpt-3.5-turbo-1106", verbose=True):
-    root_dir = "./files/"
+    root_dir = "./shared_dir/"
     os.makedirs(root_dir, exist_ok=True)
     file_tools = FileManagementToolkit(root_dir=root_dir, 
                                        selected_tools=[

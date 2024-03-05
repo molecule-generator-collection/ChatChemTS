@@ -274,9 +274,9 @@ if df is not None:
             ax.set_ylabel("Actual Value")
             st.pyplot(fig, use_container_width=False)
 
-        with open(os.path.join('/app/files', output_fname), 'wb') as f:
+        with open(os.path.join('/app/shared_dir', output_fname), 'wb') as f:
             pickle.dump(automl, f, pickle.HIGHEST_PROTOCOL)
 
         if use_scaler:
-            with open(os.path.join('/app/files', output_scaler_name), 'wb') as f:
+            with open(os.path.join('/app/shared_dir', output_scaler_name), 'wb') as f:
                 pickle.dump(scaler, f)

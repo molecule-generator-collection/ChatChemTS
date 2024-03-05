@@ -10,7 +10,7 @@ services:
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
-      - shared_volume:/app/files
+      - shared_volume:/app/shared_dir
     depends_on:
       - api_chemtsv2
     networks:
@@ -23,7 +23,7 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - shared_volume:/app/files
+      - shared_volume:/app/shared_dir
     networks:
       - chatmolgen_network
 
@@ -34,7 +34,7 @@ services:
     ports:
       - "8501:8501"
     volumes:
-      - shared_volume:/app/files
+      - shared_volume:/app/shared_dir
     networks:
       - chatmolgen_network
   
@@ -45,7 +45,7 @@ services:
     ports:
       - "8002:8002"
     volumes:
-      - shared_volume:/app/files
+      - shared_volume:/app/shared_dir
     networks:
       - chatmolgen_network
 
@@ -54,7 +54,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ${PWD}/volumes_test_dir
+      device: ${PWD}/shared_dir
       o: bind
 
 networks:

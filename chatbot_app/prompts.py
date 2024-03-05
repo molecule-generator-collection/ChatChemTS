@@ -66,7 +66,7 @@ from rdkit.Chem import AllChem
 import numpy as np
 from chemtsv2.reward import Reward
 FLAML_MODEL_NAME = flaml_model.pkl  # Need to replace user specified filename.
-with open(os.path.join('/app/files', FLAML_MODEL_NAME), 'rb') as f:
+with open(os.path.join('/app/shared_dir', FLAML_MODEL_NAME), 'rb') as f:
     AUTOML = pickle.load(f)
 class CustomReward(Reward):
     def get_objective_functions(conf):
@@ -102,7 +102,7 @@ c_val: 1.0
 threshold_type: generation_num
 #hours: 0.01
 generation_num: 300
-output_dir: files/example01
+output_dir: shared_dir/example01
 model_setting:
   model_json: model/model.tf25.json
   model_weight: model/model.tf25.best.ckpt.h5
@@ -147,13 +147,13 @@ Response: Return a configuration file with `use_lipinski_filter` and `use_sascor
 - **Example 3:**
 ```
 Instruction: Generate 30000 molecules and save the result in `test01`.
-Response: Return a configuration file with `generation_num` set to 30000 and `output_dir` set to `files/test01`. All `output_dir` must start with `files/`.
+Response: Return a configuration file with `generation_num` set to 30000 and `output_dir` set to `shared_dir/test01`. All `output_dir` must start with `shared_dir/`.
 ```
 
 
 **Caution:**
 - Ensure the configuration file accurately reflects the users' specifications.
-- Convert a Python file name given by users into dot notation for correct import. For example, `custom_reward.py` should be changed to `files.custom_reward`.
+- Convert a Python file name given by users into dot notation for correct import. For example, `custom_reward.py` should be changed to `shared_dir.custom_reward`.
 - Allways return configuration parameters within a code block using triple backticks.
 
 
