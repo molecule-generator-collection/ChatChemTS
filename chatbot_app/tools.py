@@ -1,36 +1,31 @@
-import os
 import http.client
+from pathlib import Path
+from typing import Optional, Type
 import urllib.parse
-from typing import Type
 
 from langchain.chains import ConversationChain
 from langchain.chains.conversation.prompt import PROMPT
+from langchain_core.callbacks import CallbackManagerForToolRun
+from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_experimental.agents.agent_toolkits import create_python_agent
 from langchain_experimental.tools.python.tool import PythonREPLTool
 from langchain.tools import Tool, BaseTool
-from langchain_community.agent_toolkits import FileManagementToolkit
+#from langchain_community.agent_toolkits import FileManagementToolkit
+from langchain_community.tools.file_management.utils import INVALID_PATH_TEMPLATE, BaseFileToolMixin, FileValidationError
 from langchain.agents.agent_types import AgentType
 from langchain.agents import initialize_agent
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.schema import StrOutputParser
-from pydantic.v1 import BaseModel, Field
 
 from prompts import PREFIX_REWARD, PREFIX_CONFIG
 
 
 def prepare_tools(model_name="gpt-3.5-turbo-1106", verbose=True):
-    root_dir = "./shared_dir/"
-    os.makedirs(root_dir, exist_ok=True)
-    file_tools = FileManagementToolkit(root_dir=root_dir, 
-                                       selected_tools=[
-                                           'read_file',
-                                           'write_file',]).get_tools()
-
     return [
         create_reward_generator_tool(model_name),
-        create_config_generator_tool(model_name),
-    ] + file_tools + [ChemTSv2ApiTool(), PredictionModelBuilder()]
+        create_config_generator_tool(model_name)] \
+        + [ChemTSv2ApiTool(), PredictionModelBuilder(), WriteFileTool()]
 
 
 class RewardGeneratorInput(BaseModel):
@@ -129,3 +124,44 @@ class PredictionModelBuilder(BaseTool):
     
     async def _arun(self) -> str:
         raise NotImplementedError
+
+
+# The below two classes is based on and modified from the original repository at [source].
+# [source]: https://github.com/langchain-ai/langchain/blob/master/libs/community/langchain_community/tools/file_management/write.py
+class WriteFileInput(BaseModel):
+    """Input for WriteFileTool."""
+
+    file_path: str = Field(..., description="name of file")
+    text: str = Field(..., description="text to write to file")
+    append: bool = Field(
+        default=False, description="Whether to append to an existing file."
+    )
+
+
+class WriteFileTool(BaseFileToolMixin, BaseTool):
+    """Tool that writes a file to disk."""
+
+    name: str = "write_file"
+    args_schema: Type[BaseModel] = WriteFileInput
+    description: str = "Write file to disk"
+    root_dir: str = "./shared_dir/"
+
+    def _run(
+        self,
+        file_path: str,
+        text: str,
+        append: bool = False,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
+    ) -> str:
+        try:
+            write_path = self.get_relative_path(file_path)
+        except FileValidationError:
+            return INVALID_PATH_TEMPLATE.format(arg_name="file_path", value=file_path)
+        try:
+            write_path.parent.mkdir(exist_ok=True, parents=False)
+            mode = "a" if append else "w"
+            with write_path.open(mode, encoding="utf-8") as f:
+                f.write(text)
+            return f"File written successfully to `{write_path.relative_to(Path('/app'))}`. Provide the path to the user."
+        except Exception as e:
+            return "Error: " + str(e)
