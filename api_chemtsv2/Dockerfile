@@ -26,8 +26,8 @@ RUN apt-get update && \
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
     HOST=0.0.0.0 \
-    LISTEN_PORT=8001
-EXPOSE 8001
+    LISTEN_PORT=8003
+EXPOSE 8003
 
 COPY --from=builder $VENV_PATH $VENV_PATH
 
@@ -36,4 +36,4 @@ WORKDIR /app
 COPY --from=builder /app /app
 COPY ./api_chemtsv2/main.py /app
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]

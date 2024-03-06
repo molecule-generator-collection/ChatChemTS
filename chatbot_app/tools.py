@@ -94,8 +94,7 @@ class ChemTSv2ApiTool(BaseTool):
         headers = {
             'Accept': 'application/json',
             }
-        #conn = http.client.HTTPConnection('localhost', 8001)
-        conn = http.client.HTTPConnection('api_chemtsv2', 8001)
+        conn = http.client.HTTPConnection('api_chemtsv2', 8003)
         conn.request('POST', '/run/?' + params, headers=headers)
         response = conn.getresponse()
         status = response.status
@@ -120,7 +119,7 @@ class PredictionModelBuilder(BaseTool):
         super(PredictionModelBuilder, self).__init__()
     
     def _run(self) -> str:
-        return f"Open [FLAML Model Builder](http://localhost:8002) in your browser to create prediction models."
+        return f"Open [FLAML Model Builder](http://localhost:8001) in your browser to create prediction models. Display the previous sentence to the user as is."
     
     async def _arun(self) -> str:
         raise NotImplementedError

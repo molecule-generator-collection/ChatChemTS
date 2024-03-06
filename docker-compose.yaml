@@ -1,12 +1,34 @@
 version: '3.8'
 services:
+ 
+  interface:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - shared_volume:/app/shared_dir
+    networks:
+      - chatmolgen_network
   
+  model_builder:
+    build:
+      context: .
+      dockerfile: ./model_builder_app/Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - shared_volume:/app/shared_dir
+    networks:
+      - chatmolgen_network
+ 
   chatbot:
     build:
       context: .
       dockerfile: ./chatbot_app/Dockerfile
     ports:
-      - "8000:8000"
+      - "8002:8002"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
@@ -21,29 +43,7 @@ services:
       context: .
       dockerfile: ./api_chemtsv2/Dockerfile
     ports:
-      - "8001:8001"
-    volumes:
-      - shared_volume:/app/shared_dir
-    networks:
-      - chatmolgen_network
-
-  interface:
-    build: 
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - "8501:8501"
-    volumes:
-      - shared_volume:/app/shared_dir
-    networks:
-      - chatmolgen_network
-  
-  model_builder:
-    build:
-      context: .
-      dockerfile: ./model_builder_app/Dockerfile
-    ports:
-      - "8002:8002"
+      - "8003:8003"
     volumes:
       - shared_volume:/app/shared_dir
     networks:
