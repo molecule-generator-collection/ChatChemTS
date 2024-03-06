@@ -38,38 +38,11 @@ async def start():
                 min=0,
                 max=2,
                 step=0.1,
-            ),
-            Slider(
-                id="MaxExecutionTime",
-                label="OpenAI - Max Execution Time",
-                initial=300,
-                min=60,
-                max=600,
-                step=10,
             )
         ]
     ).send()
     await setup_agent(settings)
 
-    #res = await cl.AskActionMessage(
-    #    content="Save this reward file?",
-    #    actions=[
-    #        cl.Action(name="save", value="save", label="✅ Save it"),
-    #        cl.Action(name="continue", value="continue", label="▶️ Continue chatting")
-    #    ],
-    #    timeout=90, 
-    #).send()
-
-    #if res and res.get("value") == "save":
-    #    filename = await cl.AskUserMessage(
-    #        content="Type a reward file name: ",
-    #        timeout=300,
-    #    ).send()
-    #    if filename:
-    #        await cl.Message(
-    #            content=f"Reward file is saved at /mnt/data/{filename['content']}"
-    #        ).send()
-    
 
 @cl.on_settings_update
 async def setup_agent(settings):
@@ -83,7 +56,6 @@ async def setup_agent(settings):
     )
     memory = get_memory()
     _SUFFIX = "Chat history:\n{chat_history}\n\n" + SUFFIX
-    #_SUFFIX = SUFFIX
     agent_kwargs = {
         "suffix": _SUFFIX,
         "system_message": SystemMessage(content=SYSTEM_MESSAGE),
@@ -99,7 +71,7 @@ async def setup_agent(settings):
         agent_kwargs=agent_kwargs,
         verbose=True,
         handle_parsing_errors=True,
-        max_execution_time=settings["MaxExecutionTime"],
+        max_execution_time=None,
     )
     cl.user_session.set("agent", agent)
 
