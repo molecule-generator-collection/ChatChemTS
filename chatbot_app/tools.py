@@ -25,7 +25,7 @@ def prepare_tools(model_name="gpt-3.5-turbo-1106", verbose=True):
     return [
         create_reward_generator_tool(model_name),
         create_config_generator_tool(model_name)] \
-        + [ChemTSv2ApiTool(), PredictionModelBuilder(), WriteFileTool()]
+        + [ChemTSv2ApiTool(), PredictionModelBuilder(), AnalysisTool(), WriteFileTool()]
 
 
 class RewardGeneratorInput(BaseModel):
@@ -120,6 +120,24 @@ class PredictionModelBuilder(BaseTool):
     
     def _run(self) -> str:
         return f"Open [FLAML Model Builder](http://localhost:8001) in your browser to create prediction models. Display the previous sentence to the user as is."
+    
+    async def _arun(self) -> str:
+        raise NotImplementedError
+
+
+class AnalysisToolInput():
+    pass
+
+class AnalysisTool(BaseTool):
+    name = "molecule_generation_analysis_tool"
+    description = """This tool returns a URL of an application for analyzing the molecule generation result.
+                     No arguments are required to use this tool."""
+
+    def __init__(self):
+        super(AnalysisTool, self).__init__()
+    
+    def _run(self) -> str:
+        return f"Open [ChatMolGen Analysis App](http://localhost:8002) in your browser to analyze the molecule generation result. Display the previous sentence to the user as is."
     
     async def _arun(self) -> str:
         raise NotImplementedError

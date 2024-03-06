@@ -5,7 +5,7 @@ RUN pip install poetry==1.6.1
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock /app/
+COPY ./analysis_app/pyproject.toml ./analysis_app/poetry.lock /app/
 
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
@@ -22,16 +22,14 @@ RUN apt-get update && \
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
     HOST=0.0.0.0 \
-    LISTEN_PORT=8000 \
-    STREAMLIT_SERVER_PORT=8000
-EXPOSE 8000
+    LISTEN_PORT=8002 \
+    STREAMLIT_SERVER_PORT=8002
+EXPOSE 8002
 
 COPY --from=builder $VENV_PATH $VENV_PATH
 
 WORKDIR /app
 
-COPY ./chatmolgen.py /app/
-COPY ./pages/ /app/pages/
+COPY ./analysis_app/analysis.py /app/
 
-CMD ["streamlit", "run", "chatmolgen.py"]
-
+CMD ["streamlit", "run", "analysis.py"]

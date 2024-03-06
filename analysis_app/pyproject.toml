@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "interface"
+name = "analysis"
 version = "0.1.0"
 description = ""
 authors = ["sishida21 <29348731+sishida21@users.noreply.github.com>"]

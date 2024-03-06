@@ -6,7 +6,7 @@ from pandas.api.types import is_categorical_dtype, is_numeric_dtype
 from rdkit import Chem
 
 st.set_page_config(layout='wide')
-st.title("Analysis Tool for Molecule Generation")
+st.title("ChatMolGen Analysis Tool")
 
 
 @st.cache_data

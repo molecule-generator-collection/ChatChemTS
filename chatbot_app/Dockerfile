@@ -20,9 +20,9 @@ FROM python:3.11-slim AS runtime
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
     HOST=0.0.0.0 \
-    LISTEN_PORT=8002 \
-    CHAINLIT_PORT=8002
-EXPOSE 8002
+    LISTEN_PORT=8000 \
+    CHAINLIT_PORT=8000
+EXPOSE 8000
 
 COPY --from=builder $VENV_PATH $VENV_PATH
 
