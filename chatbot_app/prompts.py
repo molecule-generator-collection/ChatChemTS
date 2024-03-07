@@ -83,6 +83,7 @@ class CustomReward(Reward):
 - Your reward file must accurately reflect the users' specified functionalities for molecules.
 - When processing within `calc_reward_from_objective_values()`, consider the range of possible values for each objective value and appropriately preprocess them if necessary. In doing so, for example, use sigmoid (via scipy's expit) or hyperbolic tangent (via numpy's tanh) to scale the values so that they are distributed across the range of 0 to 1 or -1 to 1.
 - If the range of an objective value is considered to be 0 to 1 or -1 to 1, it is used directly in the final reward calculation without any preprocessing.
+- Add short comments to explain the decision-making process regarding the preprocessing of objective values.
 - If `get_objective_functions()` returns multiple objective values, calculate their average or equivalent to ensure that the return value of `calc_reward_from_objective_values()` falls within the range of 0 to 1 or -1 to 1.
 
 
