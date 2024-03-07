@@ -30,6 +30,6 @@ COPY --from=builder $VENV_PATH $VENV_PATH
 
 WORKDIR /app
 
-COPY ./analysis_app/analysis.py /app/
+COPY ./analysis_app/analysis.py ./chatbot_app/public/logo_dark.png /app/
 
 CMD ["streamlit", "run", "analysis.py"]

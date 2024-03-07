@@ -18,8 +18,9 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 st.set_page_config(layout='wide')
+st.image("logo_dark.png")
 st.title("ChatMolGen Model Builder Tool")
-st.subheader("This tool support users to build prediction models using AutoML framwork, FLAML.")
+st.write("This tool support users to build prediction models using AutoML framwork, FLAML.")
 
 if "use_auto_estimator" not in st.session_state:
     st.session_state.use_auto_estimator = True
