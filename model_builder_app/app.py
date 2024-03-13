@@ -136,7 +136,7 @@ if st.session_state.use_dataset_from_uniprotid:
                 pass
             if duplicate_option == "Keep Maximum Value" or duplicate_option == "Keep Minimum Value":
                 df_activity.reset_index(drop=True, inplace=True)
-            df_activity = df_activity[~df_activity['assay_description'].apply(lambda x: any(remove_text in x for remove_text in assay_exclude_list))]
+            df_activity = df_activity[~df_activity['assay_description'].apply(lambda x: any(remove_text in x.lower() for remove_text in assay_exclude_list))]
             df_activity = df_activity[~df_activity['assay_description'].isin(exclude_activity_types)]
 
             # fetch molecule-related data
