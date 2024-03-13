@@ -112,15 +112,14 @@ def has_atom_map(smiles):
 
 
 df = None
-with st.sidebar:
-    st.header("File upload")
-    uploaded_file = st.file_uploader("Select the result file of a molecule generation")
-    if uploaded_file is not None:
-        df = load_data(uploaded_file)
-        if has_atom_map(df['smiles'][10]):
-            df['smiles'] = df['smiles'].apply(remove_atom_map)
-            df['parents'] = df['parents'].apply(remove_atom_map)
-        st.session_state['df'] = df
+st.header("File upload")
+uploaded_file = st.file_uploader("Select the result file of a molecule generation")
+if uploaded_file is not None:
+    df = load_data(uploaded_file)
+    if has_atom_map(df['smiles'][10]):
+        df['smiles'] = df['smiles'].apply(remove_atom_map)
+        df['parents'] = df['parents'].apply(remove_atom_map)
+    st.session_state['df'] = df
 
 if 'df' in st.session_state:
     df = st.session_state['df']
