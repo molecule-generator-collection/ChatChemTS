@@ -3,7 +3,7 @@ import pickle
 
 from chembl_webresource_client.settings import Settings
 Settings.Instance().MAX_LIMIT = 1000
-Settings.Instance().CACHING = False
+Settings.Instance().CACHING = True
 from chembl_webresource_client.new_client import new_client
 from flaml import AutoML
 import numpy as np
