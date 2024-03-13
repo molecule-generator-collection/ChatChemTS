@@ -137,10 +137,7 @@ if df is not None:
         st.header("Molecule Grid Viewer Option")
         n_items_per_page = st.number_input("Enter number of molecules to show", value=24, max_value=128)
         grid_height = st.number_input("Enter the value of grid height in pixel", value=750, max_value=1000)
-    st.header("Molecule Grid Viewer")
-    create_mols2grid(filter_dataframe(df, key="mols2grid"), n_items_per_page, grid_height)
 
-    with st.sidebar:
         st.header("Line Chart Option")
         option = st.multiselect(
             'Select columns to show in line chart',
@@ -168,12 +165,12 @@ if df is not None:
         else:  # lc_y_min is not None and lc_y_max is not None
             alt_y = alt.Y('value:Q', axis=alt.Axis(title="Value")).scale(domainMin=lc_y_min, domainMax=lc_y_max, clamp=False) 
             
-        
-        #submit_button = st.form_submit_button(label="Submit")
         draw_chart = st.button("Draw process of molecule generation", type='primary')
+        
+    st.header("Molecule Grid Viewer")
+    create_mols2grid(filter_dataframe(df, key="mols2grid"), n_items_per_page, grid_height)
 
-    if draw_chart: #option != [] and submit_button:
-        #st.header("Line Chart")
+    if draw_chart: 
         st.header("Optimization Process of Molecule Generation")
         filtered_df = df[(df.index >= lc_x_min) & (df.index <= lc_x_max)].reset_index()
         df_ma = calculate_moving_average(filtered_df[option], window_size)
