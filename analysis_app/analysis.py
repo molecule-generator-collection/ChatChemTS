@@ -136,7 +136,7 @@ if df is not None:
     with st.sidebar:
         st.header("Molecule Grid Viewer Option")
         n_items_per_page = st.number_input("Enter number of molecules to show", value=24, max_value=128)
-        grid_height = st.number_input("Enter the value of grid height in pixel", value=600, max_value=1000)
+        grid_height = st.number_input("Enter the value of grid height in pixel", value=750, max_value=1000)
     st.header("Molecule Grid Viewer")
     create_mols2grid(filter_dataframe(df, key="mols2grid"), n_items_per_page, grid_height)
 
