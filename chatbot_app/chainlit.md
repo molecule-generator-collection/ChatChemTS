@@ -17,11 +17,12 @@ When using ChatMolGen, you don't need to understand the following functions, but
 
 ## Demo prompt
 
+Be sure to enter one-line at a time.
+
 ### STEP 1. Generate Reward file
 
 ```text
 Write a reward function to maximize LogP value of molecules using ChemTSv2.
-
 Save the above reward script as `reward_test.py`.
 ```
 
@@ -29,7 +30,6 @@ Save the above reward script as `reward_test.py`.
 
 ```text
 Write a config file to generate 500 molecules using the reward file, `reward_test.py` with a Lipinski and a Radical filters. Output directory is set to `output_example`.
-
 Save the above configuration as `config_test.yaml`.
 ```
 
