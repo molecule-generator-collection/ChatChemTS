@@ -119,7 +119,7 @@ class PredictionModelBuilder(BaseTool):
         super(PredictionModelBuilder, self).__init__()
     
     def _run(self) -> str:
-        return f"Return the following URL, `[FLAML Model Builder](http://localhost:8001)`, to users. Users can create prediction models in their browser. Be sure to display  `[FLAML Model Builder](http://localhost:8001)` to users."
+        return f"Include `[FLAML Model Builder](http://localhost:8001)` in your final response for user access. Users can create prediction models in their browser. Ensure `[FLAML Model Builder](http://localhost:8001)` is clearly stated in the response."
     
     async def _arun(self) -> str:
         raise NotImplementedError
@@ -137,7 +137,8 @@ class AnalysisTool(BaseTool):
         super(AnalysisTool, self).__init__()
     
     def _run(self) -> str:
-        return f"Return the following URL, `[ChatMolGen Analysis App](http://localhost:8002)`, to users. Users can analyze the molecule generation result in their browser. Be sure to display `[ChatMolGen Analysis App](http://localhost:8002)` to users."
+        #return f"Return the following URL, `[ChatMolGen Analysis App](http://localhost:8002)`, to users. Users can analyze the molecule generation result in their browser. Be sure to display `[ChatMolGen Analysis App](http://localhost:8002)` to users."
+        return f"Include `[ChatMolGen Analysis App](http://localhost:8002)` in your final response for user access. Users can analyze the molecule generation result in their browser. Ensure `[ChatMolGen Analysis App](http://localhost:8002)` is clearly stated in the response."
     
     async def _arun(self) -> str:
         raise NotImplementedError

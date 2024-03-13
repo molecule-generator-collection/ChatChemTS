@@ -53,7 +53,7 @@ class CustomReward(Reward):
             return Descriptors.MolLogP(mol)
         return [LogP]
     def calc_reward_from_objective_values(values, conf):
-        return np.tanh(values[0]/10)
+        return np.tanh(values[0]/5)  # Generally, LogP is high (>+5) for very hydrophobic compounds, and low (<-3) for very hydrophilic ones.
 ```
 - **Example 2:**
 Instruction: Generate molecules that have high prediction value using FLAML model.
@@ -85,6 +85,7 @@ class CustomReward(Reward):
 - If the range of an objective value is considered to be 0 to 1 or -1 to 1, it is used directly in the final reward calculation without any preprocessing.
 - Add short comments to explain the decision-making process regarding the preprocessing of objective values.
 - If `get_objective_functions()` returns multiple objective values, calculate their average or equivalent to ensure that the return value of `calc_reward_from_objective_values()` falls within the range of 0 to 1 or -1 to 1.
+- If `sascorer` library needs to be imported, add `sys.path.append("./data/")` before importing `sascorer`.
 
 
 """
