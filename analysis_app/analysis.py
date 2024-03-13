@@ -1,3 +1,4 @@
+import altair as alt
 import mols2grid
 import streamlit as st
 import streamlit.components.v1 as components
@@ -139,16 +140,67 @@ if df is not None:
     st.header("Molecule Grid Viewer")
     create_mols2grid(filter_dataframe(df, key="mols2grid"), n_items_per_page, grid_height)
 
-    with st.sidebar.form(key='line_chart'):
+    with st.sidebar:
         st.header("Line Chart Option")
         option = st.multiselect(
             'Select columns to show in line chart',
             [c for c in df.columns if c not in exclude_columns_for_line_chart],
             placeholder='reward')
-        window_size = st.slider('Window size', value=50, min_value=1, max_value=300)
-        submit_button = st.form_submit_button(label="Submit")
+        window_size = st.number_input('Window size', value=50, min_value=1, max_value=1000)
+        max_range_size = df.shape[0]-(window_size-1)
+        st.write("[Optional]")
+        col1, col2 = st.columns(2)
+        with col1:
+            lc_x_min = st.number_input("Min value of x-axis", value=0, min_value=0, max_value=max_range_size)
+        with col2:
+            lc_x_max = st.number_input("Max value of x-axis", value=max_range_size, min_value=0, max_value=max_range_size)
+        col3, col4 = st.columns(2)
+        with col3:
+            lc_y_min = st.number_input("Min value of y-axis", value=None)
+        with col4:
+            lc_y_max = st.number_input("Max value of y-axis", value=None)
+        if lc_y_min is None and lc_y_max is None:
+            alt_y = alt.Y('value:Q', axis=alt.Axis(title="Value")).scale(clamp=False) 
+        elif lc_y_min is not None and lc_y_max is None:
+            alt_y = alt.Y('value:Q', axis=alt.Axis(title="Value")).scale(domainMin=lc_y_min, clamp=False) 
+        elif lc_y_min is None and lc_y_max is not None:
+            alt_y = alt.Y('value:Q', axis=alt.Axis(title="Value")).scale(domainMax=lc_y_max, clamp=False) 
+        else:  # lc_y_min is not None and lc_y_max is not None
+            alt_y = alt.Y('value:Q', axis=alt.Axis(title="Value")).scale(domainMin=lc_y_min, domainMax=lc_y_max, clamp=False) 
+            
+        
+        #submit_button = st.form_submit_button(label="Submit")
+        draw_chart = st.button("Draw process of molecule generation", type='primary')
 
-    if option != [] and submit_button:
-        df_ma = calculate_moving_average(df[option], window_size)
-        st.header("Line Chart")
-        st.line_chart(df_ma, y=option)
+    if draw_chart: #option != [] and submit_button:
+        #st.header("Line Chart")
+        st.header("Optimization Process of Molecule Generation")
+        filtered_df = df[(df.index >= lc_x_min) & (df.index <= lc_x_max)].reset_index()
+        df_ma = calculate_moving_average(filtered_df[option], window_size)
+        df_ma = df_ma.reset_index().dropna(subset=option)
+        chart = alt.Chart(df_ma).transform_fold(
+            option,
+            ).mark_line().encode(
+                x=alt.X('index:Q', axis=alt.Axis(title="Number of generated molecules", minExtent=30)),
+                y=alt_y,
+                color=alt.Color('key:N', legend=alt.Legend(title=None, labelFontSize=24))
+            ).properties(
+                height=500,
+            ).configure(
+                autosize='fit-x'
+            ).configure_axis(
+                labelPadding=10,
+                labelFontSize=20,
+                titlePadding=20,
+                titleFontSize=30
+            ).configure_title(
+                fontSize=36,
+                anchor='middle'
+            ).configure_legend(
+                symbolSize=500,
+                symbolStrokeWidth=10
+            ).configure_view(
+                stroke=None
+            ).interactive()
+
+        st.altair_chart(chart, use_container_width=True, theme='streamlit')
