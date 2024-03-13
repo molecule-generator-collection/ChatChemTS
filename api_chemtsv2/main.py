@@ -9,7 +9,8 @@ app = FastAPI()
 @app.post("/run/")
 async def run_chemtsv2(
     config_file_path: str = Query(..., description="Path to the config file")):
-    config_file_path = os.path.join('shared_dir', config_file_path)  # Shared volume in Docker compose
+    if not config_file_path.startswith('shared_dir'):
+        config_file_path = os.path.join('shared_dir', config_file_path)  # Shared volume in Docker compose
     with open(config_file_path, "r") as f:
         conf = yaml.load(f, Loader=yaml.SafeLoader)
 
