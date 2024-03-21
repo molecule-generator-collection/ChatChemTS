@@ -84,6 +84,7 @@ class ChemTSv2ApiTool(BaseTool):
     name = "chemtsv2_api_tool"
     description = "This tool runs ChemTSv2 application."
     args_schema: Type[BaseModel] = ChemTSv2ApiInput
+    return_direct: bool = True
     
     def __init__(self):
         super(ChemTSv2ApiTool, self).__init__()
@@ -114,12 +115,13 @@ class PredictionModelBuilder(BaseTool):
     name = "flaml_prediction_model_builder_tool"
     description = """This tool returns a URL of an application for building a prediction model using FLAML.
                      No arguments are required to use this tool."""
+    return_direct: bool = True
 
     def __init__(self):
         super(PredictionModelBuilder, self).__init__()
     
     def _run(self) -> str:
-        return f"Include `[FLAML Model Builder](http://localhost:8001)` in your final response for user access. Users can create prediction models in their browser. Ensure `[FLAML Model Builder](http://localhost:8001)` is clearly stated in the response."
+        return f"Open [FLAML Model Builder](http://localhost:8001) in your browser to create prediction models."
     
     async def _arun(self) -> str:
         raise NotImplementedError
@@ -132,13 +134,14 @@ class AnalysisTool(BaseTool):
     name = "molecule_generation_analysis_tool"
     description = """This tool returns a URL of an application for analyzing the molecule generation result.
                      No arguments are required to use this tool."""
+    return_direct: bool = True
 
     def __init__(self):
         super(AnalysisTool, self).__init__()
     
     def _run(self) -> str:
         #return f"Return the following URL, `[ChatMolGen Analysis App](http://localhost:8002)`, to users. Users can analyze the molecule generation result in their browser. Be sure to display `[ChatMolGen Analysis App](http://localhost:8002)` to users."
-        return f"Include `[ChatMolGen Analysis App](http://localhost:8002)` in your final response for user access. Users can analyze the molecule generation result in their browser. Ensure `[ChatMolGen Analysis App](http://localhost:8002)` is clearly stated in the response."
+        return f"Open [ChatMolGen Analysis App](http://localhost:8002) in your browser to analyze the molecule generation result." 
     
     async def _arun(self) -> str:
         raise NotImplementedError
