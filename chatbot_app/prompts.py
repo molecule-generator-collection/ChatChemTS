@@ -41,19 +41,19 @@ class Reward(ABC):
 
 **Instructions and Responses:**
 - **Example 1:**
-Instruction: Generate molecules that have high LogP value
+Instruction: Generate molecules that have high [USER-SPECIFIED] value
 Response: Return a reward file with reference to the following script:
 ```python
-from rdkit.Chem import Descriptors
 import numpy as np
 from chemtsv2.reward import Reward
 class CustomReward(Reward):
     def get_objective_functions(conf):
-        def LogP(mol):
-            return Descriptors.MolLogP(mol)
-        return [LogP]
+        def user_specified_value(mol):
+            value = sum_function(mol)  # calculate the user-specified value
+            return value
+        return [user_specified_value]
     def calc_reward_from_objective_values(values, conf):
-        return np.tanh(values[0]/5)  # Generally, LogP is high (>+5) for very hydrophobic compounds, and low (<-3) for very hydrophilic ones.
+        return np.tanh(values[0])  #
 ```
 - **Example 2:**
 Instruction: Generate molecules that have high prediction value using FLAML model.
@@ -78,13 +78,26 @@ class CustomReward(Reward):
         return np.tanh(values[0])
 ```
 
+**Reward Calculation**
+- When processing within `calc_reward_from_objective_values()`, consider the range of possible values for each objective value and appropriately preprocess them if necessary. In doing so, for example, use sigmoid (via scipy's expit), hyperbolic tangent (via numpy's tanh), or gaussian function (described later) to scale the values so that they are distributed across the range of 0 to 1 or -1 to 1.
+- Use the Gaussian function when a user wants molecules with the specified objective value. You can use the following function. 
+```python
+def gaussian(x, mu):
+    '''
+    Args:
+        x: row objective value
+        mu: user-specified value (e.g., If a user wants molecules that have some value with 5.0, mu must be set to 5.0.)
+    '''
+    sigma = mu * 0.2
+    return np.exp(-((x - mu) ** 2) / (2 * sigma ** 2))
+```
+- If the range of an objective value is considered to be 0 to 1 or -1 to 1, it is used directly in the final reward calculation without any preprocessing.
+- If `get_objective_functions()` returns multiple objective values, calculate their average or equivalent to ensure that the return value of `calc_reward_from_objective_values()` falls within the range of 0 to 1 or -1 to 1.
+
 **Caution:**
 - Do NOT execute any python code.
 - Your reward file must accurately reflect the users' specified functionalities for molecules.
-- When processing within `calc_reward_from_objective_values()`, consider the range of possible values for each objective value and appropriately preprocess them if necessary. In doing so, for example, use sigmoid (via scipy's expit) or hyperbolic tangent (via numpy's tanh) to scale the values so that they are distributed across the range of 0 to 1 or -1 to 1.
-- If the range of an objective value is considered to be 0 to 1 or -1 to 1, it is used directly in the final reward calculation without any preprocessing.
 - Add short comments to explain the decision-making process regarding the preprocessing of objective values.
-- If `get_objective_functions()` returns multiple objective values, calculate their average or equivalent to ensure that the return value of `calc_reward_from_objective_values()` falls within the range of 0 to 1 or -1 to 1.
 - If `sascorer` library needs to be imported, add `sys.path.append("./data/")` before importing `sascorer`.
 
 
@@ -102,7 +115,7 @@ PREFIX_CONFIG = """
 
 **Example Configuration:**
 ```yaml
-c_val: 1.0
+c_val: 0.1
 # threshold_type: [time, generation_num]
 threshold_type: generation_num
 #hours: 0.01
