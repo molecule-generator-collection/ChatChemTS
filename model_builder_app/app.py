@@ -30,16 +30,20 @@ if "use_dataset_from_csv" not in st.session_state:
     st.session_state.use_dataset_from_csv = False
 if "use_dataset_from_uniprotid" not in st.session_state:
     st.session_state.use_dataset_from_uniprotid = False
+if "df" not in st.session_state:
+    st.session_state.df = None
 
 def click_button(clicked_type):
     if clicked_type == "csv":
         if not st.session_state.use_dataset_from_csv:
             st.session_state.use_dataset_from_csv = not st.session_state.use_dataset_from_csv
             st.session_state.use_dataset_from_uniprotid = not st.session_state.use_dataset_from_csv
+            st.session_state.df = None
     elif clicked_type == "uniprot":
         if not st.session_state.use_dataset_from_uniprotid:
             st.session_state.use_dataset_from_uniprotid = not st.session_state.use_dataset_from_uniprotid
             st.session_state.use_dataset_from_csv = not st.session_state.use_dataset_from_uniprotid
+            st.session_state.df = None
     else:
         raise Exception
 
@@ -63,11 +67,10 @@ with col1:
 with col2:
     st.button('Fetch data from ChEMBL database', type='primary', on_click=click_button, kwargs=dict(clicked_type='uniprot'))
 
-df = None
 if st.session_state.use_dataset_from_csv:
     uploaded_file = st.file_uploader("Upload CSV file.", type="csv")
     if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
+        st.session_state.df = pd.read_csv(uploaded_file)
 if st.session_state.use_dataset_from_uniprotid:
     uniprot_id = st.text_input("Enter UniProt ID of target protein")
     target_api = new_client.target
@@ -78,7 +81,7 @@ if st.session_state.use_dataset_from_uniprotid:
     target_results = pd.DataFrame(
         target_api.filter(
             target_components__accession=uniprot_id
-        ).filter(target_type="SINGLE PROTEIN"))
+        ).filter(target_type__in=["SINGLE PROTEIN", "PROTEIN COMPLEX"]))
     if not uniprot_id:
         st.stop()
     if target_results.empty:
@@ -86,10 +89,23 @@ if st.session_state.use_dataset_from_uniprotid:
         st.stop()
     st.success("ChEMBL database contains records for the provided UniProt ID. Proceed to the next step.")
 
+    st.subheader("Retrieved target information")
+    st.dataframe(
+        pd.concat([target_results.pref_name.rename("Preferred Name"), target_results.target_chembl_id.rename("ChEMBL ID")],
+                  axis=1), hide_index=True
+    )
+
     st.subheader("Deduplicate molecules by selecting representative pChEMBL values")
     duplicate_option = st.selectbox(
         'Select which duplicates (if any) to keep.',
         ('Keep Maximum Value', 'Keep Minimum Value', 'Do Nothing'),
+    )
+
+    st.subheader("Retain records by assay type.")
+    include_assay_types = st.multiselect(
+        "Select assay types to retain records. ref. https://chembl.gitbook.io/chembl-interface-documentation/frequently-asked-questions/chembl-data-questions",
+        options=["B", "F", "A", "T", "P", "U"],
+        default=["B"]
     )
     
     st.subheader("Filter records containing the following texts in assay descriptions.")
@@ -101,7 +117,7 @@ if st.session_state.use_dataset_from_uniprotid:
     exclude_activity_types = st.multiselect(
         "Select activity types to exclude records from dataset",
         options=["IC50", "XC50", "EC50", "AC50", "Ki", "Kd", "Potency", "ED50"],
-        default=["EC50", "AC50"]
+        default=[]
     )
 
     if st.button("Fetch & Clean Data", type='primary'):
@@ -111,7 +127,7 @@ if st.session_state.use_dataset_from_uniprotid:
             tmp_df_list = []
             for _, tr in target_results.iterrows():
                 activities = activity_api.filter(
-                        target_chembl_id=tr['target_chembl_id'], assay_type="B"
+                        target_chembl_id=tr['target_chembl_id'], assay_type__in=include_assay_types
                     ).filter(pchembl_value__isnull=False).only(
                         "activity_id",
                         "assay_chembl_id",
@@ -124,7 +140,8 @@ if st.session_state.use_dataset_from_uniprotid:
                         "standard_units",
                         "standard_relation",
                         "target_organism",
-                        "target_chembl_id")
+                        "target_chembl_id",
+                        "document_chembl_id")
                 tmp_df_list.append(pd.DataFrame.from_dict(activities))
             df_activity = pd.concat(tmp_df_list, ignore_index=True)
             df_activity.drop(['units', 'type', 'value', 'relation'], axis=1, inplace=True)
@@ -154,7 +171,7 @@ if st.session_state.use_dataset_from_uniprotid:
             df = pd.merge(df_molecule, df_activity, on="molecule_chembl_id", how='inner')
             df.reset_index(drop=True, inplace=True)
             # reorder columns
-            df = df[[
+            st.session_state.df = df[[
                 "canonical_smiles",
                 "pchembl_value",
                 "assay_description",
@@ -162,15 +179,17 @@ if st.session_state.use_dataset_from_uniprotid:
                 "standard_value",
                 "standard_units",
                 "standard_relation",
-                "activity_id",
                 "assay_chembl_id",
                 "assay_type",
                 "molecule_chembl_id",
                 "target_organism",
-                "target_chembl_id"]]
+                "target_chembl_id",
+                "document_chembl_id"]]
 
-if df is not None:
+if st.session_state.df is not None:
+    df = st.session_state.df
     st.header("Dataset Preview")
+    st.text("If you want to modify the below dataset, you can download it as a CSV file. Then, go back to the beginning and upload the file.")
     st.text(f"Record count: {len(df)}")
     st.dataframe(df, use_container_width=True, hide_index=True)
 
