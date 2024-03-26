@@ -3,7 +3,7 @@ import pickle
 
 from chembl_webresource_client.settings import Settings
 Settings.Instance().MAX_LIMIT = 1000
-Settings.Instance().CACHING = True
+Settings.Instance().CACHING = False
 from chembl_webresource_client.new_client import new_client
 from flaml import AutoML
 import numpy as np
@@ -154,7 +154,7 @@ if st.session_state.use_dataset_from_uniprotid:
             if duplicate_option == "Keep Maximum Value" or duplicate_option == "Keep Minimum Value":
                 df_activity.reset_index(drop=True, inplace=True)
             df_activity = df_activity[~df_activity['assay_description'].apply(lambda x: any(remove_text in x.lower() for remove_text in assay_exclude_list))]
-            df_activity = df_activity[~df_activity['assay_description'].isin(exclude_activity_types)]
+            df_activity = df_activity[~df_activity['standard_type'].isin(exclude_activity_types)]
 
             # fetch molecule-related data
             molecule_provider = molecule_api.filter(
