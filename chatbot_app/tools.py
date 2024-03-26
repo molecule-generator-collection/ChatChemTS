@@ -84,7 +84,7 @@ class ChemTSv2ApiTool(BaseTool):
     name = "chemtsv2_api_tool"
     description = "This tool runs ChemTSv2 application."
     args_schema: Type[BaseModel] = ChemTSv2ApiInput
-    return_direct: bool = True
+    return_direct: bool = False
     
     def __init__(self):
         super(ChemTSv2ApiTool, self).__init__()
