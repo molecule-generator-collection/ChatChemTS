@@ -4,12 +4,16 @@ services:
     build:
       context: .
       dockerfile: ./chatbot_app/Dockerfile
+      args:
+        - USER_ID=${USER_ID}
+        - GROUP_ID=${GROUP_ID}
     ports:
       - "8000:8000"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
       - shared_volume:/app/shared_dir
+    user: "${USER_ID}:${GROUP_ID}"
     depends_on:
       - api_chemtsv2
     networks:
@@ -19,10 +23,14 @@ services:
     build:
       context: .
       dockerfile: ./model_builder_app/Dockerfile
+      args:
+        - USER_ID=${USER_ID}
+        - GROUP_ID=${GROUP_ID}
     ports:
       - "8001:8001"
     volumes:
       - shared_volume:/app/shared_dir
+    user: "${USER_ID}:${GROUP_ID}"
     networks:
       - chatmolgen_network
  
@@ -30,10 +38,14 @@ services:
     build: 
       context: .
       dockerfile: ./analysis_app/Dockerfile
+      args:
+        - USER_ID=${USER_ID}
+        - GROUP_ID=${GROUP_ID}
     ports:
       - "8002:8002"
     volumes:
       - shared_volume:/app/shared_dir
+    user: "${USER_ID}:${GROUP_ID}"
     networks:
       - chatmolgen_network
   
@@ -41,10 +53,14 @@ services:
     build:
       context: .
       dockerfile: ./api_chemtsv2/Dockerfile
+      args:
+        - USER_ID=${USER_ID}
+        - GROUP_ID=${GROUP_ID}
     ports:
       - "8003:8003"
     volumes:
       - shared_volume:/app/shared_dir
+    user: "${USER_ID}:${GROUP_ID}"
     networks:
       - chatmolgen_network
 

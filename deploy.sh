@@ -6,6 +6,10 @@
 #
 #####################################
 
+USER_ID=$(id -u)
+GROUP_ID=$(id -g)
+export USER_ID GROUP_ID
+
 function show_help() {
     echo "Usage: $0 {deploy|stop|clean|help}"
     echo "  deploy: Deploy and start the application using docker-compose"
@@ -17,12 +21,15 @@ function show_help() {
 
 function deploy() {
     echo "Deploying the application..."
+    docker compose build --no-cache
     docker compose up -d
+    echo "ChatChemTS is now running! Access it at http://localhost:8000"
 }
 
 function start() {
     echo "Starting the existing deployment..."
     docker compose start
+    echo "ChatChemTS is now running! Access it at http://localhost:8000"
 }
 
 function stop() {
@@ -57,3 +64,4 @@ case "$1" in
         exit 1
         ;;
 esac
+

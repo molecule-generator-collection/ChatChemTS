@@ -16,6 +16,8 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 
 # runtime image
 FROM python:3.11-slim AS runtime
+ARG USER_ID
+ARG GROUP_ID
 RUN apt-get update && \
     apt-get install -y libgomp1
 
@@ -26,10 +28,11 @@ ENV VENV_PATH="/app/.venv" \
     STREAMLIT_SERVER_PORT=8001
 EXPOSE 8001
 
-COPY --from=builder $VENV_PATH $VENV_PATH
+COPY --from=builder --chown=${USER_ID}:${GROUP_ID} $VENV_PATH $VENV_PATH
 
 WORKDIR /app
+RUN chown -R ${USER_ID}:${GROUP_ID} /app
 
-COPY ./model_builder_app/app.py ./chatbot_app/public/logo_dark.png /app/
+COPY --chown=${USER_ID}:${GROUP_ID} ./model_builder_app/app.py ./chatbot_app/public/logo_dark.png /app/
 
 CMD ["streamlit", "run", "app.py"]

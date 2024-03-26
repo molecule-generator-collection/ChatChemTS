@@ -16,6 +16,8 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 
 # runtime image
 FROM python:3.11-slim AS runtime
+ARG USER_ID
+ARG GROUP_ID
 
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
@@ -24,12 +26,13 @@ ENV VENV_PATH="/app/.venv" \
     CHAINLIT_PORT=8000
 EXPOSE 8000
 
-COPY --from=builder $VENV_PATH $VENV_PATH
+COPY --from=builder --chown=${USER_ID}:${GROUP_ID} $VENV_PATH $VENV_PATH
 
 WORKDIR /app
+RUN chown -R ${USER_ID}:${GROUP_ID} /app
 
-COPY ./chatbot_app/app.py ./chatbot_app/chainlit.md ./chatbot_app/prompts.py ./chatbot_app/tools.py /app/
-COPY ./chatbot_app/.chainlit/ /app/.chainlit/
-COPY ./chatbot_app/public/ /app/public
+COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/app.py ./chatbot_app/chainlit.md ./chatbot_app/prompts.py ./chatbot_app/tools.py /app/
+COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/.chainlit/ /app/.chainlit/
+COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/public/ /app/public
 
 CMD ["chainlit", "run", "app.py"]
