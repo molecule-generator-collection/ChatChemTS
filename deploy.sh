@@ -6,6 +6,11 @@
 #
 #####################################
 
+# error handling
+set -e 
+set -o errtrace
+trap "echo An error occurred during the execution." ERR
+
 USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 export USER_ID GROUP_ID
