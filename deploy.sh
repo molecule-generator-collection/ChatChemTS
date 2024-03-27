@@ -6,7 +6,7 @@
 #
 #####################################
 
-# error handling
+# Error handling
 set -e 
 set -o errtrace
 trap "echo An error occurred during the execution." ERR
@@ -15,6 +15,16 @@ USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 export USER_ID GROUP_ID
 
+# Check whether OPENAI_API_KEY is set in .env
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+if [ -z "${OPENAI_API_KEY}" ]; then
+    echo "Error: OPENAI_API_KEY is not set in .env file."
+    exit 1
+fi
+
+# Main process
 function show_help() {
     echo "Usage: $0 {deploy|stop|clean|help}"
     echo "  deploy: Deploy and start the application using docker-compose"
