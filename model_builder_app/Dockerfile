@@ -18,15 +18,16 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 FROM python:3.11-slim AS runtime
 ARG USER_ID
 ARG GROUP_ID
+ARG MODEL_BUILDER_PORT
 RUN apt-get update && \
     apt-get install -y libgomp1
 
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
     HOST=0.0.0.0 \
-    LISTEN_PORT=8001 \
-    STREAMLIT_SERVER_PORT=8001
-EXPOSE 8001
+    LISTEN_PORT=${MODEL_BUILDER_PORT} \
+    STREAMLIT_SERVER_PORT=${MODEL_BUILDER_PORT}
+EXPOSE ${MODEL_BUILDER_PORT}
 
 COPY --from=builder --chown=${USER_ID}:${GROUP_ID} $VENV_PATH $VENV_PATH
 

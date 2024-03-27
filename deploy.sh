@@ -38,13 +38,13 @@ function deploy() {
     echo "Deploying the application..."
     docker compose build --no-cache
     docker compose up -d
-    echo "ChatChemTS is now running! Access it at http://localhost:8000"
+    echo "ChatChemTS is now running! Access it at http://localhost:${CHATBOT_PORT}"
 }
 
 function start() {
     echo "Starting the existing deployment..."
     docker compose start
-    echo "ChatChemTS is now running! Access it at http://localhost:8000"
+    echo "ChatChemTS is now running! Access it at http://localhost:${CHATBOT_PORT}"
 }
 
 function stop() {

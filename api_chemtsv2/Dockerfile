@@ -21,6 +21,7 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 FROM python:3.11-slim AS runtime
 ARG USER_ID
 ARG GROUP_ID
+ARG CHEMTS_PORT
 RUN apt-get update && \
     apt-get install -y libgomp1 && \
     rm -rf /var/lib/apt/lists/*
@@ -28,8 +29,8 @@ RUN apt-get update && \
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
     HOST=0.0.0.0 \
-    LISTEN_PORT=8003
-EXPOSE 8003
+    LISTEN_PORT=${CHEMTS_PORT}
+EXPOSE ${CHEMTS_PORT}
 
 COPY --from=builder --chown=${USER_ID}:${GROUP_ID} $VENV_PATH $VENV_PATH
 
@@ -38,4 +39,4 @@ WORKDIR /app
 COPY --from=builder --chown=${USER_ID}:${GROUP_ID} /app /app
 COPY --chown=${USER_ID}:${GROUP_ID} ./api_chemtsv2/main.py /app
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]
+CMD uvicorn main:app --host ${HOST} --port ${LISTEN_PORT}

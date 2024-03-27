@@ -1,4 +1,5 @@
 import http.client
+import os
 from pathlib import Path
 from typing import Optional, Type
 import urllib.parse
@@ -95,7 +96,7 @@ class ChemTSv2ApiTool(BaseTool):
         headers = {
             'Accept': 'application/json',
             }
-        conn = http.client.HTTPConnection('api_chemtsv2', 8003)
+        conn = http.client.HTTPConnection('api_chemtsv2', os.getenv('CHEMTS_PORT'))
         conn.request('POST', '/run/?' + params, headers=headers)
         response = conn.getresponse()
         status = response.status
@@ -121,7 +122,7 @@ class PredictionModelBuilder(BaseTool):
         super(PredictionModelBuilder, self).__init__()
     
     def _run(self) -> str:
-        return f"Open [FLAML Model Builder](http://localhost:8001) in your browser to create prediction models."
+        return f"Open [FLAML Model Builder](http://localhost:{os.getenv('MODEL_BUILDER_PORT')}) in your browser to create prediction models."
     
     async def _arun(self) -> str:
         raise NotImplementedError
@@ -140,8 +141,7 @@ class AnalysisTool(BaseTool):
         super(AnalysisTool, self).__init__()
     
     def _run(self) -> str:
-        #return f"Return the following URL, `[ChatMolGen Analysis App](http://localhost:8002)`, to users. Users can analyze the molecule generation result in their browser. Be sure to display `[ChatMolGen Analysis App](http://localhost:8002)` to users."
-        return f"Open [ChatMolGen Analysis App](http://localhost:8002) in your browser to analyze the molecule generation result." 
+        return f"Open [ChatMolGen Analysis App](http://localhost:{os.getenv('ANALYSIS_PORT')}) in your browser to analyze the molecule generation result." 
     
     async def _arun(self) -> str:
         raise NotImplementedError

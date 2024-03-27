@@ -18,15 +18,16 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 FROM python:3.11-slim AS runtime
 ARG USER_ID
 ARG GROUP_ID
+ARG ANALYSIS_PORT
 RUN apt-get update && \
     apt-get install -y libxrender1 libxext6
 
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
     HOST=0.0.0.0 \
-    LISTEN_PORT=8002 \
-    STREAMLIT_SERVER_PORT=8002
-EXPOSE 8002
+    LISTEN_PORT=${ANALYSIS_PORT} \
+    STREAMLIT_SERVER_PORT=${ANALYSIS_PORT}
+EXPOSE ${ANALYSIS_PORT}
 
 COPY --from=builder --chown=${USER_ID}:${GROUP_ID} $VENV_PATH $VENV_PATH
 

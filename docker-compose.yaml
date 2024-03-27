@@ -7,10 +7,14 @@ services:
       args:
         - USER_ID=${USER_ID}
         - GROUP_ID=${GROUP_ID}
+        - CHATBOT_PORT=${CHATBOT_PORT}
     ports:
-      - "8000:8000"
+      - "${CHATBOT_PORT}:${CHATBOT_PORT}"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MODEL_BUILDER_PORT=${MODEL_BUILDER_PORT}
+      - ANALYSIS_PORT=${ANALYSIS_PORT}
+      - CHEMTS_PORT=${CHEMTS_PORT}
     volumes:
       - shared_volume:/app/shared_dir
     user: "${USER_ID}:${GROUP_ID}"
@@ -26,8 +30,11 @@ services:
       args:
         - USER_ID=${USER_ID}
         - GROUP_ID=${GROUP_ID}
+        - MODEL_BUILDER_PORT=${MODEL_BUILDER_PORT}
     ports:
-      - "8001:8001"
+      - "${MODEL_BUILDER_PORT}:${MODEL_BUILDER_PORT}"
+    environment:
+      - MODEL_BUILDER_PORT=${MODEL_BUILDER_PORT}
     volumes:
       - shared_volume:/app/shared_dir
     user: "${USER_ID}:${GROUP_ID}"
@@ -41,8 +48,11 @@ services:
       args:
         - USER_ID=${USER_ID}
         - GROUP_ID=${GROUP_ID}
+        - ANALYSIS_PORT=${ANALYSIS_PORT}
     ports:
-      - "8002:8002"
+      - "${ANALYSIS_PORT}:${ANALYSIS_PORT}"
+    environment:
+      - ANALYSIS_PORT=${ANALYSIS_PORT}
     volumes:
       - shared_volume:/app/shared_dir
     user: "${USER_ID}:${GROUP_ID}"
@@ -56,8 +66,11 @@ services:
       args:
         - USER_ID=${USER_ID}
         - GROUP_ID=${GROUP_ID}
+        - CHEMTS_PORT=${CHEMTS_PORT}
     ports:
-      - "8003:8003"
+      - "${CHEMTS_PORT}:${CHEMTS_PORT}"
+    environment:
+      - CHEMTS_PORT=${CHEMTS_PORT}
     volumes:
       - shared_volume:/app/shared_dir
     user: "${USER_ID}:${GROUP_ID}"

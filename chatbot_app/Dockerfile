@@ -18,13 +18,14 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 FROM python:3.11-slim AS runtime
 ARG USER_ID
 ARG GROUP_ID
+ARG CHATBOT_PORT
 
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
     HOST=0.0.0.0 \
-    LISTEN_PORT=8000 \
-    CHAINLIT_PORT=8000
-EXPOSE 8000
+    LISTEN_PORT=${CHATBOT_PORT} \
+    CHAINLIT_PORT=${CHATBOT_PORT}
+EXPOSE ${CHATBOT_PORT}
 
 COPY --from=builder --chown=${USER_ID}:${GROUP_ID} $VENV_PATH $VENV_PATH
 
