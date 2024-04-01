@@ -286,10 +286,19 @@ if st.session_state.df is not None:
             y_pred = automl.predict(X_test)
             correlation = np.corrcoef(y_pred, y_test)[0, 1]
             if use_scaler:
-                ax.scatter(scaler.inverse_transform(y_pred.reshape(-1, 1)), scaler.inverse_transform(y_test.reshape(-1, 1)), marker='o', s=20, c='dimgray', alpha=0.2)
+                y_pred_transformed = scaler.inverse_transform(y_pred.reshape(-1, 1)).flatten()
+                y_test_transformed = scaler.inverse_transform(y_test.reshape(-1, 1)).flatten()
+                ax.scatter(y_pred_transformed, y_test_transformed, marker='o', s=20, c='dimgray', alpha=0.2)
+                min_val = min(y_pred_transformed.min(), y_test_transformed.min())
+                max_val = max(y_pred_transformed.max(), y_test_transformed.max())
             else:
                 ax.scatter(y_pred, y_test, marker='o', s=20, c='dimgray', alpha=0.2)
+                min_val = min(y_pred.min(), y_test.min())
+                max_val = max(y_pred.max(), y_test.max())
             ax.text(1.05, 0.05, f"Corr. Coef.: {correlation:.2f}\nBest Estimator: {automl.best_estimator}", fontsize='small', transform=ax.transAxes)
+            padding = (max_val - min_val) * 0.05
+            ax.set_xlim(min_val-padding, max_val+padding)
+            ax.set_ylim(min_val-padding, max_val+padding)
             ax.set_xlabel("Prediction Value")
             ax.set_ylabel("Actual Value")
             st.pyplot(fig, use_container_width=False)
