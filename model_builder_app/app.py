@@ -189,7 +189,7 @@ if st.session_state.use_dataset_from_uniprotid:
 if st.session_state.df is not None:
     df = st.session_state.df
     st.header("Dataset Preview")
-    st.text("If you want to modify the below dataset, you can download it as a CSV file. Then, go back to the beginning and upload the file.")
+    st.info("If you want to modify the below dataset, you can download it as a CSV file. Then, go back to the beginning and upload the file.")
     st.text(f"Record count: {len(df)}")
     st.dataframe(df, use_container_width=True, hide_index=True)
 
@@ -245,19 +245,21 @@ if st.session_state.df is not None:
         value=60,
     )
 
+    st.subheader("Target Value Standardization")
+    st.text("Use this feature if the target values are not standardized or otherwise processed.")
+    st.warning("CAUTION: Do not standardize if you are creating a prediction model for use in generating molecules with specific values. e.g., To generate molecules that have LogP value with around 5.0.")
+    use_scaler = st.checkbox("Apply standardization for target values")
+    if use_scaler:
+        output_scaler_name = st.text_input(
+            "Enter filename for scaler in pickle format",
+            value="standard_scaler.pkl"
+        )
+
     st.subheader("Output Filename For Best Estimator")
     output_fname = st.text_input(
         "Enter filename in pickle format",
         value="flaml_model.pkl"
     )
-    use_scaler = st.checkbox("Apply standardization for target values")
-    if use_scaler:
-        st.subheader("Output Filename For Scaler")
-        output_scaler_name = st.text_input(
-            "Enter filename in pickle format",
-            value="standard_scaler.pkl"
-        )
-
 
     if st.button("Run AutoML", type='primary'):
         with st.spinner("AutoML started..."):
