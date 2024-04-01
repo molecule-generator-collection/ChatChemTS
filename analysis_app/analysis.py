@@ -1,3 +1,6 @@
+import os
+import pickle
+
 import altair as alt
 import mols2grid
 import streamlit as st
@@ -5,6 +8,7 @@ import streamlit.components.v1 as components
 import pandas as pd
 from pandas.api.types import is_categorical_dtype, is_numeric_dtype
 from rdkit import Chem
+from sklearn.preprocessing import StandardScaler
 
 st.set_page_config(layout='wide')
 st.image("logo_dark.png")
@@ -37,7 +41,7 @@ def create_mols2grid(df, n_items_per_page, grid_height):
 
 def filter_dataframe(df: pd.DataFrame, key: str, show_checkbox=True, doModify=False) -> pd.DataFrame:
     """
-    This function is based on https://github.com/tylerjrichards/st-filter-dataframe/blob/main/streamlit_app.py written by Streamlit Data Team
+    This function is based on https://github.com/arnaudmiribel/streamlit-extras/blob/main/src/streamlit_extras/dataframe_explorer/__init__.py written by Streamlit Data Team
     Adds a UI on top of a dataframe to let viewers filter columns
 
     Args:
@@ -131,6 +135,24 @@ if df is not None:
 
     st.header("Dataframe")
     _df = filter_dataframe(df, key="dataframe")
+    apply_inverse_transform = st.checkbox("Scale back the target value to the original representation")
+    if apply_inverse_transform:
+        column_to_be_scaled = st.selectbox(
+            "Select a target value to be scaled back",
+            [c for c in df.columns if c not in exclude_columns_for_line_chart] + ['reward'],
+            index=None,
+        )
+        scaler_fname = st.selectbox(
+            "Select the saved file for scaling in FLAML model builder.",
+            [f for f in os.listdir('/app/shared_dir') if f.endswith('.pkl') and 'flaml' not in f],
+            index=None,
+        )
+        if scaler_fname is not None:
+            with open(os.path.join('/app/shared_dir', scaler_fname), 'rb') as f:
+                scaler = pickle.load(f)
+            orig_values = scaler.inverse_transform(_df[[column_to_be_scaled]])
+            _df[f"Original {column_to_be_scaled}"] = orig_values
+
     render_dataframe(_df)
 
     with st.sidebar:

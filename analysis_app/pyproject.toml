@@ -9,6 +9,7 @@ readme = "README.md"
 python = ">=3.11,<3.12"
 mols2grid = "^2.0.0"
 streamlit = "^1.30.0"
+scikit-learn = "^1.4.0"
 pandas = "^2.1.4"
 rdkit = "^2023.9.4"
 
