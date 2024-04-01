@@ -246,7 +246,7 @@ if st.session_state.df is not None:
     )
 
     st.subheader("Target Value Standardization")
-    st.text("Use this feature if the target values are not standardized or otherwise processed.")
+    st.info("Use this feature if the target values are not standardized or otherwise processed.")
     st.warning("CAUTION: Do not standardize if you are creating a prediction model for use in generating molecules with specific values. e.g., To generate molecules that have LogP value with around 5.0.")
     use_scaler = st.checkbox("Apply standardization for target values")
     if use_scaler:
