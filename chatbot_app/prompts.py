@@ -70,16 +70,18 @@ with open(os.path.join('/app/shared_dir', FLAML_MODEL_NAME), 'rb') as f:
     AUTOML = pickle.load(f)
 class CustomReward(Reward):
     def get_objective_functions(conf):
-        def PredictedValue(mol):
+        def PredictedValue(mol):  # modify function name per user-specified property
             fp = np.array(AllChem.GetMorganFingerprintAsBitVect(mol, 2, 2048))[np.newaxis, :]
-            return AUTOML.predict(fp).item()  # predicted value is assumed to be scaled.
+            return AUTOML.predict(fp).item()
         return [PredictedValue]
     def calc_reward_from_objective_values(values, conf):
         return np.tanh(values[0])
 ```
 
 **Reward Calculation**
-- When processing within `calc_reward_from_objective_values()`, consider the range of possible values for each objective value and appropriately preprocess them if necessary. In doing so, for example, use sigmoid (via scipy's expit), hyperbolic tangent (via numpy's tanh), or gaussian function (described later) to scale the values so that they are distributed across the range of 0 to 1 or -1 to 1.
+- In `calc_reward_from_objective_values()`, consider the range of possible values for each objective value and preprocess them as necessary,
+  using sigmoid (via scipy's expit), hyperbolic tangent (via numpy's tanh), or gaussian function (described later) to scale the values so that
+  they are distributed across the range of 0 to 1 or -1 to 1.
 - Use the Gaussian function when a user wants molecules with the specified objective value. You can use the following function. 
 ```python
 def gaussian(x, mu):
@@ -91,8 +93,12 @@ def gaussian(x, mu):
     sigma = mu * 0.2
     return np.exp(-((x - mu) ** 2) / (2 * sigma ** 2))
 ```
-- If the range of an objective value is considered to be 0 to 1 or -1 to 1, it is used directly in the final reward calculation without any preprocessing.
-- If `get_objective_functions()` returns multiple objective values, calculate their average or equivalent to ensure that the return value of `calc_reward_from_objective_values()` falls within the range of 0 to 1 or -1 to 1.
+- If the range of an objective value is considered to be 0 to 1, -1 to 1, or already standardized,
+  it should be used directly in the final reward calculation without any preprocessing.
+- If `get_objective_functions()` returns multiple objective values, calculate their average or equivalent to ensure that
+  the return value of `calc_reward_from_objective_values()` falls as closely as possible within the range of 0 to 1 or -1 to 1.
+  When a prediction model is used as an objective value, the range of output values may already be standardized. So, it's fine
+  to proceed with the calculations such as averaging. 
 
 **Caution:**
 - Do NOT execute any python code.
@@ -162,13 +168,15 @@ Response: Return a configuration file with `use_lipinski_filter` and `use_sascor
 - **Example 3:**
 ```
 Instruction: Generate 30000 molecules and save the result in `test01`.
-Response: Return a configuration file with `generation_num` set to 30000 and `output_dir` set to `shared_dir/test01`. All `output_dir` must start with `shared_dir/`.
+Response: Return a configuration file with `generation_num` set to 30000 and `output_dir` set to `shared_dir/test01`.
+          All `output_dir` must start with `shared_dir/`.
 ```
 
 
 **Caution:**
 - Ensure the configuration file accurately reflects the users' specifications.
-- Convert a Python file name given by users into dot notation for correct import. For example, `custom_reward.py` should be changed to `shared_dir.custom_reward`.
+- Convert a Python file name given by users into dot notation for correct import.
+  For example, `custom_reward.py` should be changed to `shared_dir.custom_reward`.
 - Allways return configuration parameters within a code block using triple backticks.
 
 

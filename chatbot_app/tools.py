@@ -141,7 +141,7 @@ class AnalysisTool(BaseTool):
         super(AnalysisTool, self).__init__()
     
     def _run(self) -> str:
-        return f"Open [ChatMolGen Analysis App](http://localhost:{os.getenv('ANALYSIS_PORT')}) in your browser to analyze the molecule generation result." 
+        return f"Open [ChatChemTS Analysis App](http://localhost:{os.getenv('ANALYSIS_PORT')}) in your browser to analyze the molecule generation result." 
     
     async def _arun(self) -> str:
         raise NotImplementedError
@@ -166,6 +166,7 @@ class WriteFileTool(BaseFileToolMixin, BaseTool):
     args_schema: Type[BaseModel] = WriteFileInput
     description: str = "Write file to disk"
     root_dir: str = "./shared_dir/"
+    return_direct: bool = True
 
     def _run(
         self,
@@ -183,6 +184,6 @@ class WriteFileTool(BaseFileToolMixin, BaseTool):
             mode = "a" if append else "w"
             with write_path.open(mode, encoding="utf-8") as f:
                 f.write(text)
-            return f"File written successfully to `{write_path.relative_to(Path('/app'))}`. Provide the path to the user."
+            return f"The file has been successfully saved at `{write_path.relative_to(Path('/app'))}`."
         except Exception as e:
             return "Error: " + str(e)
