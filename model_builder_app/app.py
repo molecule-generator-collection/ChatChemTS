@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(layout='wide')
 st.image("logo_dark.png")
-st.title("ChatMolGen Model Builder Tool")
+st.title("ChatChemTS Model Builder Tool")
 st.write("This tool support users to build prediction models using AutoML framwork, FLAML.")
 
 if "use_auto_estimator" not in st.session_state:
@@ -290,11 +290,11 @@ if st.session_state.df is not None:
             if use_scaler:
                 y_pred_transformed = scaler.inverse_transform(y_pred.reshape(-1, 1)).flatten()
                 y_test_transformed = scaler.inverse_transform(y_test.reshape(-1, 1)).flatten()
-                ax.scatter(y_pred_transformed, y_test_transformed, marker='o', s=20, c='dimgray', alpha=0.2)
+                ax.scatter(y_pred_transformed, y_test_transformed, marker='.', s=5, c='dimgray', alpha=0.2)
                 min_val = min(y_pred_transformed.min(), y_test_transformed.min())
                 max_val = max(y_pred_transformed.max(), y_test_transformed.max())
             else:
-                ax.scatter(y_pred, y_test, marker='o', s=20, c='dimgray', alpha=0.2)
+                ax.scatter(y_pred, y_test, marker='.', s=5, c='dimgray', alpha=0.2)
                 min_val = min(y_pred.min(), y_test.min())
                 max_val = max(y_pred.max(), y_test.max())
             ax.text(1.05, 0.05, f"Corr. Coef.: {correlation:.2f}\nBest Estimator: {automl.best_estimator}", fontsize='small', transform=ax.transAxes)

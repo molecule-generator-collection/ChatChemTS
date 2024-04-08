@@ -19,8 +19,8 @@ ChatChemTS is an open-source LLM-based GUI application for using an AI-based mol
 ### How to deploy
 
 ```bash
-git clone git@github.com:sishida21/ChatMolGen.git
-cd ChatMolGen
+git clone git@github.com:sishida21/ChatChemTS.git
+cd ChatChemTS
 # must set your OpenAI API key in `.env` file.
 ./deploy.sh deploy
 ```

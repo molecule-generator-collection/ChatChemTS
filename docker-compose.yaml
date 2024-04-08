@@ -21,7 +21,7 @@ services:
     depends_on:
       - api_chemtsv2
     networks:
-      - chatmolgen_network
+      - chatchemts_network
 
   model_builder:
     build:
@@ -39,7 +39,7 @@ services:
       - shared_volume:/app/shared_dir
     user: "${USER_ID}:${GROUP_ID}"
     networks:
-      - chatmolgen_network
+      - chatchemts_network
  
   analysis:
     build: 
@@ -57,7 +57,7 @@ services:
       - shared_volume:/app/shared_dir
     user: "${USER_ID}:${GROUP_ID}"
     networks:
-      - chatmolgen_network
+      - chatchemts_network
   
   api_chemtsv2:
     build:
@@ -75,7 +75,7 @@ services:
       - shared_volume:/app/shared_dir
     user: "${USER_ID}:${GROUP_ID}"
     networks:
-      - chatmolgen_network
+      - chatchemts_network
 
 volumes:
   shared_volume:
@@ -86,5 +86,5 @@ volumes:
       o: bind
 
 networks:
-  chatmolgen_network:
+  chatchemts_network:
     driver: bridge

@@ -12,7 +12,7 @@ from sklearn.preprocessing import StandardScaler
 
 st.set_page_config(layout='wide')
 st.image("logo_dark.png")
-st.title("ChatMolGen Analysis Tool")
+st.title("ChatChemTS Analysis Tool")
 
 
 @st.cache_data

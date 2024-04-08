@@ -1,12 +1,12 @@
-![chatmolgen logo](public/logo_dark.png)
+![chatchemts logo](public/logo_dark.png)
 
-# Welcome to ChatMolGen!
+# Welcome to ChatChemTS!
 
-ChatMolGen helps you to make reward and config files for AI-based molecule generators (currently support ChemTSv2).
+ChatChemTS helps you to make reward and config files for AI-based molecule generators (currently support ChemTSv2).
 
 ## Available tools
 
-When using ChatMolGen, you don't need to understand the following functions, but ChatMolGen uses them to enhance your molecule generation experience.
+When using ChatChemTS, you don't need to understand the following functions, but ChatChemTS uses them to enhance your molecule generation experience.
 
 - `reward_generator` creates a reward script for AI-based molecule generators.
 - `config_generator` creates a configuration for AI-based molecule generators.
