@@ -18,11 +18,20 @@ ChatChemTS is an open-source LLM-based GUI application for using an AI-based mol
 
 ### How to deploy
 
+#### Local laptop
 ```bash
 git clone git@github.com:sishida21/ChatChemTS.git
 cd ChatChemTS
 # must set your OpenAI API key in `.env` file.
 ./deploy.sh deploy
+```
+
+#### Remote server
+
+If you want to deploy ChatChemTS on a remote server, you will need to set up port forwarding for ports 8000 to 8003 to connect your local laptop to the remote server as follows.
+```bash
+ssh -L 8000:localhost:8000 -L 8001:localhost:8001 -L 8002:localhost:8002 -L 8003:localhost:8003 YOUR_REMOTE_SERVER
+# Follow the same steps as in procedure `Local laptop`.
 ```
 
 When ChatChemTS is successfully deployed, you can access it at [http://localhost:8000](http://localhost:8000). 
