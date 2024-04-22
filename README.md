@@ -6,10 +6,12 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 </div>
 
 ## Demo video
-<div align="center">
-  <img src=https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/50049eb6-d2c1-4f74-9830-f6c98ccf9ff8 width="60%">
-</div>
 
+<img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/50049eb6-d2c1-4f74-9830-f6c98ccf9ff8" width="33%"> <img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/a5cd8614-030b-4386-83bf-cc06508bd158" width="33%">
+
+- left: ChatChemTS
+- middle: Analysis tool
+- right: FLAML prediction model builder
 
 ## Quick Start
 
