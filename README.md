@@ -11,7 +11,7 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 
 - left: ChatChemTS
 - middle: Analysis tool
-- right: FLAML prediction model builder
+- right: Prediction model builder
 
 ## Quick Start
 
