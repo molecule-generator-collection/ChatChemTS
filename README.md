@@ -1,5 +1,5 @@
 # ChatChemTS
-ChatChemTS is an open-source LLM-based web application for using an AI-based molecule generator, ChemTSv2. 
+ChatChemTS is an open-source LLM-based web application for using an AI-based molecule generator, [ChemTSv2](https://github.com/molecule-generator-collection/ChemTSv2). 
 
 <div align="center">
   <img src=img/toc.png width="60%">
