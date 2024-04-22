@@ -7,7 +7,7 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 
 ## Demo Videos
 
-<img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/50049eb6-d2c1-4f74-9830-f6c98ccf9ff8" width="33%"> <img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/a5cd8614-030b-4386-83bf-cc06508bd158" width="33%"> <img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/04ed00bc-daf7-43fa-bae1-09635871e6d6" width="33%">
+<img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/50049eb6-d2c1-4f74-9830-f6c98ccf9ff8" width="32%"> <img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/a5cd8614-030b-4386-83bf-cc06508bd158" width="32%"> <img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/04ed00bc-daf7-43fa-bae1-09635871e6d6" width="32%">
 
 - left: ChatChemTS
 - middle: Analysis tool
