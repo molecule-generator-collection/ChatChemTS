@@ -2,7 +2,7 @@
 ChatChemTS is an open-source LLM-based web application for using an AI-based molecule generator, [ChemTSv2](https://github.com/molecule-generator-collection/ChemTSv2). 
 
 <div align="center">
-  <img src=img/toc.png width="60%">
+  <img src=img/toc.png width="70%">
 </div>
 
 ## Demo Videos
@@ -31,7 +31,7 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 
 #### Local laptop
 ```bash
-git clone git@github.com:sishida21/ChatChemTS.git
+git clone git@github.com:molecule-generator-collection/ChatChemTS.git
 cd ChatChemTS
 # must set your OpenAI API key in `.env` file.
 ./deploy.sh deploy
@@ -69,6 +69,18 @@ When ChatChemTS is successfully deployed, you can access it at [http://localhost
 
 
 ## How to Cite
+
+```bibtex
+@article{Ishida2024,
+  title = {Large Language Models Open New Way of AI-Assisted Molecule Design for Chemists},
+  url = {http://dx.doi.org/10.26434/chemrxiv-2024-1p82f},
+  DOI = {10.26434/chemrxiv-2024-1p82f},
+  journal = {ChemRxiv},
+  author = {Ishida,  Shoichi and Sato,  Tomohiro and Honma,  Teruki and Terayama,  Kei},
+  year = {2024},
+  month = apr 
+}
+```
 
 ## License
 
