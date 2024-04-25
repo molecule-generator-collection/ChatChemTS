@@ -76,7 +76,7 @@ When ChatChemTS is successfully deployed, you can access it at [http://localhost
   url = {http://dx.doi.org/10.26434/chemrxiv-2024-1p82f},
   DOI = {10.26434/chemrxiv-2024-1p82f},
   journal = {ChemRxiv},
-  author = {Ishida,  Shoichi and Sato,  Tomohiro and Honma,  Teruki and Terayama,  Kei},
+  author = {Ishida, Shoichi and Sato, Tomohiro and Honma, Teruki and Terayama, Kei},
   year = {2024},
   month = apr 
 }
