@@ -1,11 +1,13 @@
 # builder image
 FROM python:3.11-slim AS builder
 RUN apt-get update && \
-    apt-get install -y git
+    apt-get install -y git curl
 
 WORKDIR /app
 
 RUN git clone --depth 1 https://github.com/molecule-generator-collection/ChemTSv2.git /app
+RUN curl -o /app/data/sascorer.py https://raw.githubusercontent.com/rdkit/rdkit/master/Contrib/SA_Score/sascorer.py
+RUN curl -o /app/data/fpscores.pkl.gz https://raw.githubusercontent.com/rdkit/rdkit/master/Contrib/SA_Score/fpscores.pkl.gz
 RUN pip install poetry==1.6.1
 
 COPY ./api_chemtsv2/pyproject.toml ./api_chemtsv2/poetry.lock /app/
