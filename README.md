@@ -13,7 +13,12 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 - middle: Analysis tool
 - right: Prediction model builder
 
-## Quick Start
+## How to Start
+
+### Operating System
+The below OS is confirmed.
+- Ubuntu 22.04.2 LTS
+- Windows 11 Pro (requires WSL2. Please refer to the official document: [How to install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install))
 
 ### Hardware Requirement
 
@@ -27,13 +32,34 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 - Docker: >= version 24
 - Git
 
-### How to deploy
+>[!NOTE]
+>For Mac and Windows users, Docker Desktop is easy way to install Docker into your laptop.
+>Refer to the following links:
+- Windows: [Docker Desktop WSL 2 backend on Windows](https://docs.docker.com/desktop/features/wsl/)
+- Mac: [Install Docker Desktop on Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
+
+### Installation
+
+At first, open Terminal (Mac & Linux) or PowerShell (Windows).  
+
+If you are using Windows, ensure you switch to the WSL2 environment with the following command:
+```powershell
+wsl --distribution Ubuntu
+```
+Note that the distribution may not be named `Ubuntu`.
+You can check which distribution is actually installed by running `wsl --list`.
+
+>[!NOTE]
+>Before proceeding the next step, make sure Docker is properly started.
+- On Windows or macOS: Veryfy that Docker Desktop is running.
+- On Linux: Ensure the Docker daemon is running.
 
 #### Local laptop
 ```bash
 git clone git@github.com:molecule-generator-collection/ChatChemTS.git
 cd ChatChemTS
-# must set your OpenAI API key in `.env` file.
+# You must set your OpenAI API key in `.env` file.
+# The `.env` file is located in the root of the ChatChemTS repository.
 ./deploy.sh deploy
 ```
 
@@ -52,6 +78,9 @@ When ChatChemTS is successfully deployed, you can access it at [http://localhost
 >[!NOTE]
 >ChatChemTS is automatically deployed using Docker Compose (commands are written in deploy.sh), thus you don't need to prepare its computational environment manually.
 
+<details>
+  <summary>Click to show/hide requirements</summary>
+
 - python: 3.11
 - openai: 1.9.0
 - langchain: 0.11
@@ -67,6 +96,7 @@ When ChatChemTS is successfully deployed, you can access it at [http://localhost
 - chemtsv2: 1.0.2
 - mols2grid
 
+</details>
 
 ## How to Cite
 
