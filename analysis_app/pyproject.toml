@@ -11,7 +11,9 @@ mols2grid = "^2.0.0"
 streamlit = "^1.30.0"
 scikit-learn = "^1.4.0"
 pandas = "^2.1.4"
+numpy = "^1.26.4"
 rdkit = "^2023.9.4"
+psutil = "^6.1.0"
 
 [build-system]
 requires = ["poetry-core"]
