@@ -9,9 +9,7 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 
 <img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/50049eb6-d2c1-4f74-9830-f6c98ccf9ff8" width="32%"> <img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/a5cd8614-030b-4386-83bf-cc06508bd158" width="32%"> <img src="https://github.com/molecule-generator-collection/ChatChemTS/assets/29348731/04ed00bc-daf7-43fa-bae1-09635871e6d6" width="32%">
 
-- left: ChatChemTS
-- middle: Analysis tool
-- right: Prediction model builder
+:arrow_left: ChatChemTS   :arrow_up: Analysis tool   :arrow_right: Prediction model builder
 
 ## How to Start
 
@@ -35,24 +33,25 @@ The below OS with CPU architecture is confirmed.
 >[!NOTE]
 >For Mac and Windows users, Docker Desktop is easy way to install Docker into your laptop.
 >Refer to the following links:
-- Windows: [Docker Desktop WSL 2 backend on Windows](https://docs.docker.com/desktop/features/wsl/)
-- Mac: [Install Docker Desktop on Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
+>- Windows: [Docker Desktop WSL 2 backend on Windows](https://docs.docker.com/desktop/features/wsl/)
+>- Mac: [Install Docker Desktop on Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
 
 ### Installation
 
-At first, open Terminal (Mac & Linux) or PowerShell (Windows).  
+At first, open `Terminal (Mac & Linux)` or `PowerShell (Windows)`.  
 
-If you are using Windows, ensure you switch to the WSL2 environment with the following command:
+If you are using `Windows`, ensure you switch to the WSL2 environment with the following command:
 ```powershell
 wsl --distribution Ubuntu
 ```
 Note that the distribution may not be named `Ubuntu`.
 You can check which distribution is actually installed by running `wsl --list`.
 
->[!NOTE]
+>[!IMPORTANT]
 >Before proceeding the next step, make sure Docker is properly started.
-- On Windows or macOS: Veryfy that Docker Desktop is running.
-- On Linux: Ensure the Docker daemon is running.
+>- On `Windows` or `macOS`: Veryfy that Docker Desktop is running.
+>- On `macOS with Apple Silicon`: Must disable `Use Rosetta for x86_64/amd64 emulation on Apple Silicon` option if the option is enabled and restart your Mac to ensure that the change takes effect. ref. [Change your Docker Desktop settings](https://docs.docker.com/desktop/settings-and-maintenance/settings/)
+>- On `Linux`: Ensure the Docker daemon is running.
 
 #### Local laptop
 ```bash
@@ -60,7 +59,7 @@ git clone git@github.com:molecule-generator-collection/ChatChemTS.git
 cd ChatChemTS
 # You must set your OpenAI API key in `.env` file.
 # The `.env` file is located in the root of the ChatChemTS repository.
-./deploy.sh deploy
+bash ./deploy.sh deploy
 ```
 
 #### Remote server
@@ -71,7 +70,23 @@ ssh -L 8000:localhost:8000 -L 8001:localhost:8001 -L 8002:localhost:8002 -L 8003
 # Follow the same steps as in procedure `Local laptop`.
 ```
 
-When ChatChemTS is successfully deployed, you can access it at [http://localhost:8000](http://localhost:8000). 
+When ChatChemTS is successfully deployed, you can see the below messages and access it at [http://localhost:8000](http://localhost:8000). 
+
+```bash
+ ✔ Network chatchemts_chatchemts_network  Created                                             0.1s 
+ ✔ Volume "chatchemts_shared_volume"      Created                                             0.0s 
+ ✔ Container chatchemts-api_chemtsv2-1    Started                                             0.7s 
+ ✔ Container chatchemts-model_builder-1   Started                                             0.7s 
+ ✔ Container chatchemts-analysis-1        Started                                             0.7s 
+ ✔ Container chatchemts-chatbot-1         Started                                             0.0s 
+ChatChemTS is now running! Access it at http://localhost:8000
+```
+
+
+>[!TIP]
+>If you want to change the port numbers used for deployment, you can freely edit the port numbers in the `.env` file.
+>If you are deploying on a remote server, make sure to update the local forwarding port numbers accordingly to match the changes.
+>This is particularly useful for avoiding errors that may occur if applications like Jupyter Notebook are already using any or all of the ports from 8000 to 8003.
 
 ## Package dependency
 
