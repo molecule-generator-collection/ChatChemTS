@@ -15,22 +15,22 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 
 ## How to Start
 
-### Operating System
-The below OS is confirmed.
-- Ubuntu 22.04.2 LTS
-- Windows 11 Pro (requires WSL2. Please refer to the official document: [How to install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install))
+### Confirmed Operating System & CPU Architecture
 
-### Hardware Requirement
-
-- CPU: x86_64, amd64
-
->[!NOTE]
->arm architecture, e.g., Apple Silicon, is not currently supported
+The below OS with CPU architecture is confirmed.
+- Linux
+  - `Ubuntu` (22.04.2 LTS,  AMD EPYC 7443P `x86_64`)
+- macOS
+  - `Ventura` (13.6.8, Intel Core i9 `x86_64`; 13.7.1, Apple M2 `arm64`)
+  - `Sonoma` (14.4.1, Apple M2 `arm64`)
+- Windows (requires WSL2. Detailes in the software requirement section)
+  - `11 Pro` (23H2, Intel Core i9-11900K `amd64`)
 
 ### Software Requirement
 
 - Docker: >= version 24
 - Git
+- WSL2 (Windows Only; Please refer to the official document: [How to install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install))
 
 >[!NOTE]
 >For Mac and Windows users, Docker Desktop is easy way to install Docker into your laptop.
