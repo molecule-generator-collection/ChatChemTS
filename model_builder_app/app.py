@@ -170,6 +170,8 @@ if st.session_state.use_dataset_from_uniprotid:
             # merge both dataframe
             df = pd.merge(df_molecule, df_activity, on="molecule_chembl_id", how='inner')
             df.reset_index(drop=True, inplace=True)
+            df['pchembl_value'] = df['pchembl_value'].astype(float)
+            df['standard_value'] = df['standard_value'].astype(float)
             # reorder columns
             st.session_state.df = df[[
                 "canonical_smiles",
