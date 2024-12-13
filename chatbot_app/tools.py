@@ -22,7 +22,7 @@ from langchain.schema import StrOutputParser
 from prompts import PREFIX_REWARD, PREFIX_CONFIG
 
 
-def prepare_tools(model_name="gpt-3.5-turbo-1106", verbose=True):
+def prepare_tools(model_name="gpt-4-0613", verbose=True):
     return [
         create_reward_generator_tool(model_name),
         create_config_generator_tool(model_name)] \

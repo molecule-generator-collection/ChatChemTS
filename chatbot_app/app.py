@@ -23,7 +23,7 @@ async def start():
             Select(
                 id="Model",
                 label="OpenAI - Model",
-                values=["gpt-3.5-turbo-1106", "gpt-4", "gpt-4-1106-preview"],
+                values=["gpt-4", "gpt-4-0613", "gpt-4-turbo", "gpt-4o-mini", "gpt-4o-mini-2024-07-18", "gpt-4o", "gpt-4o-2024-11-20"],
                 initial_index=1,
             ),
             Switch(
