@@ -12,8 +12,8 @@ from prompts import SYSTEM_MESSAGE
 
 
 #@cl.cache
-def get_memory():
-    return ConversationBufferWindowMemory(memory_key="chat_history", k=1)
+def get_memory(k=1):
+    return ConversationBufferWindowMemory(memory_key="chat_history", k=k)
 
 
 @cl.on_chat_start
@@ -38,7 +38,15 @@ async def start():
                 min=0,
                 max=2,
                 step=0.1,
-            )
+            ),
+            Slider(
+                id="NumConversationMemory",
+                label="Number of messages to use as chat history",
+                initial=1,
+                min=0,
+                max=10,
+                step=1,
+            ),
         ]
     ).send()
     await setup_agent(settings)
@@ -54,7 +62,7 @@ async def setup_agent(settings):
         callbacks=[StreamingStdOutCallbackHandler()] if settings["Streaming"] else None,
         model=settings["Model"],
     )
-    memory = get_memory()
+    memory = get_memory(k=settings["NumConversationMemory"])
     _SUFFIX = "Chat history:\n{chat_history}\n\n" + SUFFIX
     agent_kwargs = {
         "suffix": _SUFFIX,
