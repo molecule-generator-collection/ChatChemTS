@@ -16,7 +16,10 @@ async def run_chemtsv2(
 
     output_path = os.path.join(conf['output_dir'], f"result_C{conf['c_val']}.csv")
     if os.path.exists(output_path):
-        return {"failed reason": f"[ERROR] {output_path} already exists. Inform users of this error."}
+        return {"failed reason": f"[ERROR] {output_path} already exists. "
+                                  "Need to change, move, or rename the output directory. "
+                                  "Just inform an user of this error and the workaround. "
+                                  "Do not try to solve the error yourself."}
 
     try:
         subprocess.run(["chemtsv2", "-c", config_file_path], check=True)
