@@ -1,14 +1,13 @@
 from langchain.agents import AgentType, initialize_agent
 from langchain.agents.structured_chat.prompt import SUFFIX
-from langchain_openai import OpenAI, ChatOpenAI
 from langchain.memory import ConversationBufferWindowMemory
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.schema import SystemMessage
 import chainlit as cl
 from chainlit.input_widget import Select, Switch, Slider
 
-from tools import prepare_tools
 from prompts import SYSTEM_MESSAGE
+from tools import prepare_tools
+from util import prepare_chat_model
 
 
 #@cl.cache
@@ -56,12 +55,7 @@ async def start():
 async def setup_agent(settings):
     print(f"Setup agent with following settings: {settings}")
     
-    llm = ChatOpenAI(
-        temperature=settings["Temperature"],
-        streaming=settings["Streaming"],
-        callbacks=[StreamingStdOutCallbackHandler()] if settings["Streaming"] else None,
-        model=settings["Model"],
-    )
+    llm = prepare_chat_model(settings=settings)
     memory = get_memory(k=settings["NumConversationMemory"])
     _SUFFIX = "Chat history:\n{chat_history}\n\n" + SUFFIX
     agent_kwargs = {
@@ -69,7 +63,7 @@ async def setup_agent(settings):
         "system_message": SystemMessage(content=SYSTEM_MESSAGE),
         "input_variables": ["input", "agent_scratchpad", "chat_history"]
     }
-    tools = prepare_tools(model_name=settings["Model"])
+    tools = prepare_tools(settings=settings)
 
     agent = initialize_agent(
         llm=llm,

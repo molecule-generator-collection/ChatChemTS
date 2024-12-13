@@ -32,7 +32,7 @@ COPY --from=builder --chown=${USER_ID}:${GROUP_ID} $VENV_PATH $VENV_PATH
 WORKDIR /app
 RUN chown -R ${USER_ID}:${GROUP_ID} /app
 
-COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/app.py ./chatbot_app/chainlit.md ./chatbot_app/prompts.py ./chatbot_app/tools.py /app/
+COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/app.py ./chatbot_app/chainlit.md ./chatbot_app/prompts.py ./chatbot_app/tools.py ./chatbot_app/util.py /app/
 COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/.chainlit/ /app/.chainlit/
 COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/public/ /app/public
 

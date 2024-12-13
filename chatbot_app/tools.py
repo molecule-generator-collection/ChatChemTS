@@ -20,12 +20,13 @@ from langchain.prompts import PromptTemplate
 from langchain.schema import StrOutputParser
 
 from prompts import PREFIX_REWARD, PREFIX_CONFIG
+from util import prepare_chat_model
 
 
-def prepare_tools(model_name="gpt-4-0613", verbose=True):
+def prepare_tools(settings, verbose=True):
     return [
-        create_reward_generator_tool(model_name),
-        create_config_generator_tool(model_name)] \
+        create_reward_generator_tool(settings=settings),
+        create_config_generator_tool(settings=settings)] \
         + [ChemTSv2ApiTool(), PredictionModelBuilder(), AnalysisTool(), WriteFileTool()]
 
 
@@ -33,9 +34,9 @@ class RewardGeneratorInput(BaseModel):
     query: str = Field(..., description="The string argument for this tool")
     
 
-def create_reward_generator_tool(model_name, verbose=False):
+def create_reward_generator_tool(settings, verbose=False):
     agent_executor = create_python_agent(
-        llm=ChatOpenAI(temperature=0, model=model_name, streaming=False),
+        llm=prepare_chat_model(settings=settings),
         tool=PythonREPLTool(),
         verbose=verbose,
         agent_type=AgentType.OPENAI_FUNCTIONS,
@@ -58,9 +59,9 @@ class ConfigGeneratorInput(BaseModel):
     query: str = Field(..., description="The string argument for this tool")
 
 
-def create_config_generator_tool(model_name, verbose=False):
+def create_config_generator_tool(settings, verbose=False):
     llm_chain = ConversationChain(
-        llm=ChatOpenAI(temperature=0, model=model_name, streaming=False),
+        llm=prepare_chat_model(settings=settings),
         verbose=verbose,
         prompt=PromptTemplate.from_template(PREFIX_CONFIG)+PROMPT,
     )
