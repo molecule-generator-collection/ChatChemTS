@@ -1,5 +1,6 @@
 # ChatChemTS
-ChatChemTS is an open-source LLM-based web application for using an AI-based molecule generator, [ChemTSv2](https://github.com/molecule-generator-collection/ChemTSv2). 
+
+ChatChemTS is an open-source LLM-based web application for using an AI-based molecule generator, [ChemTSv2](https://github.com/molecule-generator-collection/ChemTSv2).
 
 <div align="center">
   <img src=img/toc.png width="70%">
@@ -16,6 +17,7 @@ ChatChemTS is an open-source LLM-based web application for using an AI-based mol
 ### Confirmed OS & CPU Architecture
 
 The below OS with CPU architecture is confirmed.
+
 - Linux
   - `Ubuntu` (22.04.2 LTS,  AMD EPYC 7443P `x86_64`)
 - macOS
@@ -34,11 +36,13 @@ The below OS with CPU architecture is confirmed.
 >[!NOTE]
 >For Mac and Windows users, Docker Desktop is easy way to install Docker into your laptop.
 >Refer to the following links:
+>
 >- Windows: [Docker Desktop WSL 2 backend on Windows](https://docs.docker.com/desktop/features/wsl/)
 >- Mac: [Install Docker Desktop on Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
 
 >[!CAUTION]
 >Note that you must agree the [Docker Desktop license agreement](https://docs.docker.com/subscription/desktop-license/) if you use it.
+>
 >- Docker Desktop is free for small businesses (fewer than 250 employees AND less than $10 million in annual revenue), personal use, education, and non-commercial open source projects.
 >- Otherwise, it requires a paid subscription for professional use.
 >
@@ -50,25 +54,28 @@ At first, open `Terminal (Mac & Linux)` or `PowerShell (Windows)`.
 
 >[!IMPORTANT]
 >Before proceeding the next step, make sure Docker is properly started.
+>
 >- On `Windows` or `macOS`: Veryfy that Docker Desktop is running.
 >- On `macOS with Apple Silicon`: Must disable `Use Rosetta for x86_64/amd64 emulation on Apple Silicon` option if the option is enabled and restart your Mac to ensure that the change takes effect. ref. [Change your Docker Desktop settings](https://docs.docker.com/desktop/settings-and-maintenance/settings/)
->- On `Windows`: ensure you switch to the WSL2 environment with the following command: `wsl --distribution Ubuntu`. 
->Note that the distribution may not be named `Ubuntu`. 
->You can check which distribution is actually installed by running `wsl --list`. 
+>- On `Windows`: ensure you switch to the WSL2 environment with the following command: `wsl --distribution Ubuntu`.
+>Note that the distribution may not be named `Ubuntu`.
+>You can check which distribution is actually installed by running `wsl --list`.
 >- On `Linux`: Ensure the Docker daemon is running.
 
 #### Local Laptop
+
 ```bash
 git clone git@github.com:molecule-generator-collection/ChatChemTS.git
 cd ChatChemTS
 # You must set your OpenAI API key in `.env` file.
 # The `.env` file is located in the root of the ChatChemTS repository.
-bash ./deploy.sh deploy
+bash ./manage_app.sh deploy
 ```
 
 #### Remote Server
 
 If you want to deploy ChatChemTS on a remote server, you will need to set up port forwarding for ports 8000 to 8003 to connect your local laptop to the remote server as follows.
+
 ```bash
 ssh -L 8000:localhost:8000 -L 8001:localhost:8001 -L 8002:localhost:8002 -L 8003:localhost:8003 YOUR_REMOTE_SERVER
 # Follow the same steps as in procedure `Local laptop`.
@@ -93,17 +100,17 @@ ChatChemTS is now running! Access it at http://localhost:8000
 
 ## How to Use
 
-Once ChatChemTS is running, open [http://localhost:8000](http://localhost:8000) in your web browser. 
+Once ChatChemTS is running, open [http://localhost:8000](http://localhost:8000) in your web browser.
 
 ### Managin the Application
 
-Below is a simple guide on how to manage ChatChemTS Docker environments using `deploy.sh`.
+Below is a simple guide on how to manage ChatChemTS Docker environments using `manage_app.sh`.
 This script lets you easily set up, run, stop, and clean up the Docker environment without dealing directly with Docker commands.
 
-#### Basic Commands:
+#### Basic Commands
 
 ```bash
-bash ./deploy.sh {deploy|start|stop|clean|help}
+bash ./manage_app.sh {deploy|start|stop|clean|help}
 ```
 
 - `deploy`: Sets up and starts the application using docker-compose.
@@ -117,26 +124,27 @@ bash ./deploy.sh {deploy|start|stop|clean|help}
 - To start using the application for the first time:
 
 ```bash
-bash ./deploy.sh deploy
+bash ./manage_app.sh deploy
 ```
-After this, open [http://localhost:8000](http://localhost:8000) in your web browser. 
+
+After this, open [http://localhost:8000](http://localhost:8000) in your web browser.
 
 - To stop the application (for example, when you are done using it):
 
 ```bash
-bash ./deploy.sh stop
+bash ./manage_app.sh stop
 ```
 
 - To remove everything and return to a clean state:
 
 ```bash
-bash ./deploy.sh clean
+bash ./manage_app.sh clean
 ```
 
 ## Package Dependency
 
 >[!NOTE]
->ChatChemTS is automatically deployed using Docker Compose (commands are written in deploy.sh), thus you don't need to prepare its computational environment manually.
+>ChatChemTS is automatically deployed using Docker Compose (commands are written in `manage_app.sh`), thus you don't need to prepare its computational environment manually.
 
 <details>
   <summary>Click to show/hide requirements</summary>
