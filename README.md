@@ -100,7 +100,9 @@ ChatChemTS is now running! Access it at http://localhost:8000
 
 ## How to Use
 
-Once ChatChemTS is running, open [http://localhost:8000](http://localhost:8000) in your web browser.
+Once ChatChemTS is running, open [http://localhost:8000](http://localhost:8000) in your web browser.  
+>[!TIP]
+>For first-time users, please check out the [Tutorial](https://github.com/molecule-generator-collection/ChatChemTS/wiki/Tutorial) page for guidance.
 
 ### Managin the Application
 
