@@ -65,7 +65,7 @@ At first, open `Terminal (Mac & Linux)` or `PowerShell (Windows)`.
 #### Local Laptop
 
 ```bash
-git clone git@github.com:molecule-generator-collection/ChatChemTS.git
+git clone https://github.com/molecule-generator-collection/ChatChemTS.git
 cd ChatChemTS
 # You must set your OpenAI API key in `.env` file.
 # The `.env` file is located in the root of the ChatChemTS repository.
