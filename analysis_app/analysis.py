@@ -8,7 +8,6 @@ import streamlit.components.v1 as components
 import pandas as pd
 from pandas.api.types import is_categorical_dtype, is_numeric_dtype
 from rdkit import Chem
-from sklearn.preprocessing import StandardScaler
 
 st.set_page_config(layout="wide")
 st.image("logo_dark.png")
