@@ -1,6 +1,7 @@
 from langchain_openai import ChatOpenAI
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
+
 def prepare_chat_model(settings):
     chat_model = ChatOpenAI(
         temperature=settings["Temperature"],
