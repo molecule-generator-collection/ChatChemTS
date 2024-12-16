@@ -44,7 +44,7 @@ show_readme_as_default = true
 # description = ""
 
 # Large size content are by default collapsed for a cleaner ui
-default_collapse_content = true
+default_collapse_content = false
 
 # The default value for the expand messages settings.
 default_expand_messages = false
@@ -53,7 +53,7 @@ default_expand_messages = false
 hide_cot = false
 
 # Link to your github repo. This will add a github button in the UI's header.
-github = "https://github.com/sishida21/ChatChemTS"
+github = "https://github.com/molecule-generator-collection/ChatChemTS"
 
 # Specify a CSS file that can be used to customize the user interface.
 # The CSS file can be served from the public directory or via an external link.
