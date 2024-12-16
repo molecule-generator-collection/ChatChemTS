@@ -25,6 +25,7 @@ The below OS with CPU architecture is confirmed.
   - `Sonoma` (14.4.1, Apple M2 `arm64`)
 - Windows (requires WSL2. Detailes in the software requirement section)
   - `11 Pro` (23H2, Intel Core i9-11900K `amd64`)
+  - `11 Home` (23H2, AMD Ryzen 7 5700U `amd64`)
   - `10 Pro` (22H2, Intel Core i7-10870H `amd64`)
 
 ### Software Requirement
@@ -41,7 +42,7 @@ The below OS with CPU architecture is confirmed.
 >- Mac: [Install Docker Desktop on Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
 
 >[!CAUTION]
->Note that you must agree the [Docker Desktop license agreement](https://docs.docker.com/subscription/desktop-license/) if you use it.
+>If you use Docker Desktop, you must agree the [Docker Desktop license agreement](https://docs.docker.com/subscription/desktop-license/).
 >
 >- Docker Desktop is free for small businesses (fewer than 250 employees AND less than $10 million in annual revenue), personal use, education, and non-commercial open source projects.
 >- Otherwise, it requires a paid subscription for professional use.
@@ -100,6 +101,7 @@ ChatChemTS is now running! Access it at http://localhost:8000
 
 ## How to Use
 
+### Open ChatChemTS App
 Once ChatChemTS is running, open [http://localhost:8000](http://localhost:8000) in your web browser.  
 >[!TIP]
 >For first-time users, please check out the [Tutorial](https://github.com/molecule-generator-collection/ChatChemTS/wiki/Tutorial) page for guidance.
@@ -131,13 +133,19 @@ bash ./manage_app.sh deploy
 
 After this, open [http://localhost:8000](http://localhost:8000) in your web browser.
 
+- To start using the application:
+
+```bash
+bash ./manage_app.sh start
+```
+
 - To stop the application (for example, when you are done using it):
 
 ```bash
 bash ./manage_app.sh stop
 ```
 
-- To remove everything and return to a clean state:
+- To remove everything and return to a clean state (note: the contents of `shared_dir` will not be affected.):
 
 ```bash
 bash ./manage_app.sh clean
