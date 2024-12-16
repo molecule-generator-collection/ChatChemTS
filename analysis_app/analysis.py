@@ -234,8 +234,11 @@ if df is not None:
         filter_dataframe(df, key="mols2grid"), n_items_per_page, grid_height
     )
 
+    st.header("Optimization Process of Molecule Generation")
+    st.text(
+        "Use `Line Chart Option` in the sidebar to plot the moving average of target properties."
+    )
     if draw_chart:
-        st.header("Optimization Process of Molecule Generation")
         filtered_df = df[(df.index >= lc_x_min) & (df.index <= lc_x_max)].reset_index()
         df_ma = calculate_moving_average(filtered_df[option], window_size)
         df_ma = df_ma.reset_index().dropna(subset=option)

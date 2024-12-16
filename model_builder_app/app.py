@@ -348,21 +348,26 @@ if st.session_state.df is not None:
 
     st.subheader("Target Value Standardization")
     st.info(
-        "Use this feature if the target values are not standardized or otherwise processed."
+        "**When to Use This Feature:**\n\n"
+        "If your target values are not already standardized or processed, you should standardize them using this feature."
     )
     st.warning(
-        "CAUTION: Do not standardize if you are creating a prediction model for use in generating molecules with specific values. e.g., To generate molecules that have LogP value with around 5.0."
+        "**Important Note:**\n\n"
+        "Do *not* standardize your target values if your goal is to create a prediction model for generating molecules with specific target values, "
+        "such as a LogP value close to 5.0."
     )
-    use_scaler = st.checkbox("Apply standardization for target values")
+    use_scaler = st.checkbox("Apply standardization for target values", value=True)
     if use_scaler:
         output_scaler_name = st.text_input(
             "Enter filename for scaler in pickle format", value="standard_scaler.pkl"
         )
+        st.text("The output file will be saved in `ChatChemTS/shared_dir/`")
 
     st.subheader("Output Filename For Best Estimator")
     output_fname = st.text_input(
         "Enter filename in pickle format", value="flaml_model.pkl"
     )
+    st.text("The output will be saved in `ChatChemTS/shared_dir/`")
 
     if st.button("Run AutoML", type="primary"):
         with st.spinner("AutoML started..."):
@@ -431,9 +436,16 @@ if st.session_state.df is not None:
             ax.set_ylabel("Actual Value")
             st.pyplot(fig, use_container_width=False)
 
-        with open(os.path.join("/app/shared_dir", output_fname), "wb") as f:
+        output_model_path = os.path.join("/app/shared_dir", output_fname)
+        with open(output_model_path, "wb") as f:
             pickle.dump(automl, f, pickle.HIGHEST_PROTOCOL)
 
         if use_scaler:
             with open(os.path.join("/app/shared_dir", output_scaler_name), "wb") as f:
                 pickle.dump(scaler, f)
+
+        if os.path.exists(output_model_path):
+            st.success(
+                f"The prediction model has been successfully prepared and saved as `shared_dir/{output_fname}`. "
+                "You can now return to the ChatChemTS interface."
+            )
