@@ -1,5 +1,7 @@
 # ChatChemTS
 
+[![DOI](https://zenodo.org/badge/706037831.svg)](https://doi.org/10.5281/zenodo.14498884)
+
 ChatChemTS is an open-source LLM-based web application for using an AI-based molecule generator, [ChemTSv2](https://github.com/molecule-generator-collection/ChemTSv2).
 
 <div align="center">
