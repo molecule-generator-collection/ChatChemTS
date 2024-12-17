@@ -106,9 +106,10 @@ ChatChemTS is now running! Access it at http://localhost:8000
 ### Open ChatChemTS App
 Once ChatChemTS is running, open [http://localhost:8000](http://localhost:8000) in your web browser.  
 >[!TIP]
->For first-time users, please check out the [Tutorial](https://github.com/molecule-generator-collection/ChatChemTS/wiki/Tutorial) page for guidance.
+>- For first-time users, please check out the [Tutorial](https://github.com/molecule-generator-collection/ChatChemTS/wiki/Tutorial) page for guidance.
+>- Files and directories specified by a user during interactions with ChatChemTS are stored under the `ChatChemTS/shared_dir` directory.
 
-### Managin the Application
+### Managing the Application
 
 Below is a simple guide on how to manage ChatChemTS Docker environments using `manage_app.sh`.
 This script lets you easily set up, run, stop, and clean up the Docker environment without dealing directly with Docker commands.
