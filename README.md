@@ -61,8 +61,9 @@ At first, open `Terminal (Mac & Linux)` or `PowerShell (Windows)`.
 >- On `Windows` or `macOS`: Veryfy that Docker Desktop is running.
 >- On `macOS with Apple Silicon`: Must disable `Use Rosetta for x86_64/amd64 emulation on Apple Silicon` option if the option is enabled and restart your Mac to ensure that the change takes effect. ref. [Change your Docker Desktop settings](https://docs.docker.com/desktop/settings-and-maintenance/settings/)
 >- On `Windows`: ensure you switch to the WSL2 environment with the following command: `wsl --distribution Ubuntu`.
->Note that the distribution may not be named `Ubuntu`.
->You can check which distribution is actually installed by running `wsl --list`.
+>Note that the distribution may not be named `Ubuntu`. 
+>You can check which distribution is actually installed by running `wsl --list`. 
+>After switching, we recommend to set your current directory to the Desktop by running `cd Desktop`.
 >- On `Linux`: Ensure the Docker daemon is running.
 
 #### Local Laptop
