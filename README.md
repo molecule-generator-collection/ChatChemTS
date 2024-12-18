@@ -75,6 +75,9 @@ cd ChatChemTS
 bash ./manage_app.sh deploy
 ```
 
+>[!NOTE]
+> If you encounter the error related to `IncompleteRead Error`, try to rerun `bash ./manage_app.sh deploy`.
+
 #### Remote Server
 
 If you want to deploy ChatChemTS on a remote server, you will need to set up port forwarding for ports 8000 to 8003 to connect your local laptop to the remote server as follows.
