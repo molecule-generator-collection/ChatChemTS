@@ -154,6 +154,10 @@ bash ./manage_app.sh stop
 bash ./manage_app.sh clean
 ```
 
+## For Developer
+
+Please refer to the [GitHub Wiki](https://github.com/molecule-generator-collection/ChatChemTS/wiki/Developer-Document).
+
 ## Package Dependency
 
 >[!NOTE]
