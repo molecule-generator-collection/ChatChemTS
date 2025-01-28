@@ -5,7 +5,8 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-RUN git clone --depth 1 https://github.com/molecule-generator-collection/ChemTSv2.git /app
+RUN git clone https://github.com/molecule-generator-collection/ChemTSv2.git /app
+RUN git checkout tags/v1.1.0
 RUN curl -o /app/data/sascorer.py https://raw.githubusercontent.com/rdkit/rdkit/master/Contrib/SA_Score/sascorer.py
 RUN curl -o /app/data/fpscores.pkl.gz https://raw.githubusercontent.com/rdkit/rdkit/master/Contrib/SA_Score/fpscores.pkl.gz
 RUN pip install poetry==1.6.1
