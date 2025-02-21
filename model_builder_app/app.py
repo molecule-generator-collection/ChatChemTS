@@ -278,7 +278,7 @@ if st.session_state.df is not None:
         index=None,
     )
     label_col_name = st.selectbox(
-        "Select target column name",
+        "Select the column that contains the values you want to predict (target value)",
         options=df.columns,
         index=None,
     )
