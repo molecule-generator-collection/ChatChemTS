@@ -16,9 +16,13 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 
 # runtime image
 FROM python:3.11-slim AS runtime
+RUN apt-get update && \
+    apt-get install -y git curl vim
 ARG USER_ID
 ARG GROUP_ID
 ARG CHATBOT_PORT
+ARG MODEL_BUILDER_PORT
+ARG ANALYSIS_PORT
 
 ENV VENV_PATH="/app/.venv" \
     PATH="/app/.venv/bin:$PATH" \
@@ -35,5 +39,7 @@ RUN chown -R ${USER_ID}:${GROUP_ID} /app
 COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/app.py ./chatbot_app/chainlit.md ./chatbot_app/prompts.py ./chatbot_app/tools.py ./chatbot_app/util.py /app/
 COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/.chainlit/ /app/.chainlit/
 COPY --chown=${USER_ID}:${GROUP_ID} ./chatbot_app/public/ /app/public
+
+RUN sed -i -e "s/{{MODEL_BUILDER_PORT}}/${MODEL_BUILDER_PORT}/g" -e "s/{{ANALYSIS_PORT}}/${ANALYSIS_PORT}/g" chainlit.md 
 
 CMD ["chainlit", "run", "app.py"]
