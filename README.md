@@ -190,14 +190,18 @@ Please refer to the [GitHub Wiki](https://github.com/molecule-generator-collecti
 ## How to Cite
 
 ```bibtex
-@article{Ishida2024,
-  title = {Large Language Models Open New Way of AI-Assisted Molecule Design for Chemists},
-  url = {http://dx.doi.org/10.26434/chemrxiv-2024-1p82f},
-  DOI = {10.26434/chemrxiv-2024-1p82f},
-  journal = {ChemRxiv},
-  author = {Ishida, Shoichi and Sato, Tomohiro and Honma, Teruki and Terayama, Kei},
-  year = {2024},
-  month = apr 
+@article{Ishida2025,
+  title = {Large language models open new way of AI-assisted molecule design for chemists},
+  volume = {17},
+  ISSN = {1758-2946},
+  url = {http://dx.doi.org/10.1186/s13321-025-00984-8},
+  DOI = {10.1186/s13321-025-00984-8},
+  number = {1},
+  journal = {Journal of Cheminformatics},
+  publisher = {Springer Science and Business Media LLC},
+  author = {Ishida,  Shoichi and Sato,  Tomohiro and Honma,  Teruki and Terayama,  Kei},
+  year = {2025},
+  month = mar 
 }
 ```
 
